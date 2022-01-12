@@ -14,15 +14,17 @@ int main() {
     std::cout << "Enter an acction: (1-Addition, 2- Substraction, 3-Divison, 4-Multiplication, 5-Exit) ";
     std::cin  >> action;
 
-    //int resultat;
+    double result;
 
     switch (action) {
         case 1:
-        std::cout << "Result: " << firstnr + secondnr << std::endl;
+        result = firstnr + secondnr;
+        std::cout << "Result: " << result << std::endl;
         break;
 
         case 2:
-        std::cout << "Result: " << firstnr - secondnr << std::endl;
+        result = firstnr - secondnr;
+        std::cout << "Result: " << result << ". \n" << std::endl;
         break;
 
         case 3:
@@ -30,16 +32,18 @@ int main() {
                 std::cout << "Division by 0" << ". \n" << std::endl;
             }
             else{
-                std::cout << "Result: " << firstnr / secondnr << std::endl;
+                result = firstnr / secondnr;
+                std::cout << "Result: " << result << ". \n" << std::endl;
             }
             break;
 
         case 4:
-        std::cout << "Result: " << firstnr * secondnr << std::endl;
+        result = firstnr * secondnr;
+        std::cout << "Result: " << result << ". \n" << std::endl;
         break;
 
         case 5:
-        std::cout << "Bye Bye: " << std::endl;
+        std::cout << "Bye Bye. " << std::endl;
         break;
 
         default:

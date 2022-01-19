@@ -15,5 +15,18 @@ void Wizard::CastSpell(){
 void Wizard::PrintStats(){
     cout << "Wizard stats:"
          << "\nName:\t" << m_name 
-         << "\n# hitpoints:\t" << m_hitPoints 
+         << "\n# hitpoints:\t" << m_hitPoints ;
 };
+
+
+int main()
+{
+    Wizard wiz; //parameter after the constructor
+    wiz.CastSpell();
+    wiz.Fight();
+    wiz.PrintStats();
+    wiz.Talk();
+    wiz.Talk();
+    return 0;
+    //wiz.m:armor=10 //cannot access private member
+}

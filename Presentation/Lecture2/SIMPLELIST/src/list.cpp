@@ -1,31 +1,6 @@
+#include "include/list.h"
 
-//https://www.youtube.com/watch?v=FbuuIgd4iLc
-#include <iostream>
-#include <vector>
-using namespace std; //no need for std in std:cout
-
-void print_menu(string name);
-void print_list();
-void add_item();
-void delete_item();
-
-vector<string> list;  //Vector is a sequential container to store elements and not index based. Array stores a fixed-size sequential collection of elements of the same type and it is index based
-string name;
-
-int main(int arg_count, char *args[]){
-    if(arg_count>1){
-        //string name(args[1]); //find a string datatype and string variable called name, in name we pass second argument
-        //cout<< " Username " << args[1] <<endl;
-        name=string(args[1]);
-        print_menu(name);
-    }
-    else {
-        cout << "Username not supplied.. existing the program" << endl;
-    }
-    return 0; 
-}
-
-void print_menu(string name){
+void List::print_menu(){
     int choice;
     cout << "********************\n";
     cout << "1-Print List.\n";
@@ -53,7 +28,7 @@ void print_menu(string name){
     }
 }
 
-void add_item(){
+void List::add_item(){
     cout << "\n\n\n\n\n\n\n\n\n\n\n\n";
     cout << "**** Add Item ********\n";
     cout << "Type in an item and press enter: ";
@@ -63,28 +38,28 @@ void add_item(){
     list.push_back(item);
     cout << "Successfully added " << item << " to the list \n\n\n\n\n";
     cin.clear(); //make sure nothing stuck in the console buffer
-    print_menu(name);
+    print_menu();
 }
 
-void delete_item(){
+void List::delete_item(){
     cout << "*****Delete Item******\n";
     cout << "Select an item index number to delete\n";
     if(list.size()){
-        for (int i=0; i < list.size(); i++){
+        for (int i=0; i < (int)list.size(); i++){
             cout << i << ":" << list[i] << "\n";
         }
     }
     else {
         cout << "No items to delete. \n"; 
     }
-    print_menu(name);
+    print_menu();
 }
 
-void print_list(){
+void List::print_list(){
     cout << "\n\n\n\n\n\n\n\n\n\n\n\n";
     cout << "******** Printing List ******";
 
-    for (int list_index=0; list_index < list.size(); list_index++){
+    for (int list_index=0; list_index < (int)list.size(); list_index++){
         cout << " * " << list[list_index] << "\n";
     }
 
@@ -93,7 +68,7 @@ void print_list(){
     cin >> choice; // allow user to put sth in the choice character
 
     if( choice == 'M' ||  choice == 'm'){
-        print_menu(name);
+        print_menu();
     }
     else{
         cout << "Invalid choice. Quitting.. \n";

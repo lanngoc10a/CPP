@@ -10,7 +10,7 @@ LDFLAGS =
 # Makefile settings - Can be customized.
 APPNAME = SIMPLELIST
 EXT = .cpp
-SRCDIR = /Users/lan/Downloads/Github/CPP/Presentation/Lecture2/SIMPLELIST
+SRCDIR = /Users/lan/Downloads/Github/CPP/Presentation/Lecture2/SIMPLELIST/src
 OBJDIR = obj
 
 ############## Do not change anything from here downwards! #############

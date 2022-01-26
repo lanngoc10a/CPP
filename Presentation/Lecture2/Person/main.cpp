@@ -1,7 +1,8 @@
 #include <iostream>
 #include <memory>
 // &: addresse of,  ID.  pass by reference to reference //& changes number from 42 to 5
-//*pointer:In C++ int* intPtr=nullptr; 
+//*pointer: a variable that stores an address. In C++ int* intPtr=nullptr; Pointer has a type which indicates which type of variable it points to
+
 
 class Person{
 public:

@@ -1,4 +1,5 @@
-
+ #include <iostream>
+using namespace std;
 
 int Myfunction(const char* p) { 
     int i = 0; 
@@ -9,3 +10,4 @@ int Myfunction(const char* p) {
     return i; 
 } 
  
+ //*p is a variable that stores an address.

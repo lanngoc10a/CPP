@@ -1,6 +1,6 @@
 ﻿  Oblig1.cpp
-C:\Users\Richard Stølen\DAT154\Oblig1\Oblig1.cpp(358,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\Richard Stølen\DAT154\Oblig1\Oblig1.cpp(144,7): warning C4101: 'hCirPen': unreferenced local variable
-C:\Users\Richard Stølen\DAT154\Oblig1\Oblig1.cpp(143,7): warning C4101: 'hRectPen': unreferenced local variable
-C:\Users\Richard Stølen\DAT154\Oblig1\Oblig1.cpp(481,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
-  Oblig1.vcxproj -> C:\Users\Richard Stølen\DAT154\Oblig1\x64\Debug\Oblig1.exe
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(366,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(145,7): warning C4101: 'hCirPen': unreferenced local variable
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(144,7): warning C4101: 'hRectPen': unreferenced local variable
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(488,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+  Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

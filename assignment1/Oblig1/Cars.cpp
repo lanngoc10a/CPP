@@ -8,7 +8,7 @@ Cars::Cars() {
 
 void Cars::addCar(Car car) {
 	cars[numberOfCars] = car;
-	numberOfCars = numberOfCars + 1;
+	numberOfCars++;
 }
 
 Car Cars::getCar(int index) {

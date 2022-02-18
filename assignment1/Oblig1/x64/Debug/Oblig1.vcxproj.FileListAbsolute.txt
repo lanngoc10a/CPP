@@ -1,1 +1,2 @@
 C:\Users\Richard Stølen\DAT154\Oblig1\x64\Debug\Oblig1.exe
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

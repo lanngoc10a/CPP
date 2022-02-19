@@ -17,8 +17,10 @@ using namespace std;
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-Car cars2[99];
-int numberOfCars;
+Car carsHorizontal[99];
+Car carsVertical[99];
+int numberOfCarsHorizontal;
+int numberOfCarsVertical;
 
 
 // Forward declarations of functions included in this code module:
@@ -195,6 +197,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	int road_vertical_positionX = 500;
 	int road_vertical_positionY = 150;
 
+
 	POINT test[1];
 	test[0].x = 123;
 	static int penSize = 5;
@@ -205,12 +208,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 
 		SetTimer(hwnd, ID_TIMER, 2000, NULL);
-		SetTimer(hwnd, ID_TIMER2, 100, NULL);
+		SetTimer(hwnd, ID_TIMER2, 50, NULL);
 		
-		numberOfCars = 0;
+		numberOfCarsHorizontal = 0;
+		numberOfCarsVertical = 0;
 		return 0;
 
 	case WM_PAINT:
+
 		hDC = BeginPaint(hwnd, &Ps);
 
 		/*
@@ -298,8 +303,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		/*
 			Cars
 		*/
-
 		carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
+		
 		
 		/*
 		for (int i = 0; i < cars.getNumberOfCars(); i++) {
@@ -310,14 +315,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		}*/
 
-		for (int i = 0; i < numberOfCars; i++) {
-
+		for (int i = 0; i < numberOfCarsHorizontal; i++) {
+			
+			carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
 			SelectObject(hDC, carBrush);
-			Rectangle(hDC, cars2[i].getX() + 10, cars2[i].getY() - 10
-				, cars2[i].getX() - 25, cars2[i].getY() + 25);
+			Rectangle(hDC, carsHorizontal[i].getX() + 10
+				, carsHorizontal[i].getY() - 10
+				, carsHorizontal[i].getX() - 25
+				, carsHorizontal[i].getY() + 25);
 
 		}
 
+		for (int i = 0; i < numberOfCarsVertical; i++) {
+			carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
+			SelectObject(hDC, carBrush);
+			Rectangle(hDC, carsVertical[i].getX() + 10
+				, carsVertical[i].getY() - 10
+				, carsVertical[i].getX() - 25
+				, carsVertical[i].getY() + 25);
+
+		}
 
 		
 
@@ -334,9 +351,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONDOWN:
 
-		cars2[numberOfCars] = Car(200, 300);
-		numberOfCars++;
+		carsHorizontal[numberOfCarsHorizontal] = Car(200, 345);
+		numberOfCarsHorizontal++;
 		
+		return 0;
+
+
+	case WM_RBUTTONDOWN:
+
+		carsVertical[numberOfCarsVertical] = Car(507, 56);
+		numberOfCarsVertical++;
+
 		return 0;
 
 
@@ -411,8 +436,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case ID_TIMER2:
 	
-			for (int i = 0; i < numberOfCars; i++) {
-				cars2[i].setX(cars2[i].getX() + 2);
+			for (int i = 0; i < numberOfCarsHorizontal; i++) {
+				if (carsHorizontal[i].getX() == 456 && greenEnabled == false) {
+					carsHorizontal[i].setX(carsHorizontal[i].getX() + 0);
+				}
+				else {
+					carsHorizontal[i].setX(carsHorizontal[i].getX() + 4);
+				}
+			}
+
+			for (int i = 0; i < numberOfCarsVertical; i++) {
+				if (carsVertical[i].getY() == 252 && greenEnabled == false) {
+					carsVertical[i].setY(carsVertical[i].getY() + 0);
+				}
+				else {
+					carsVertical[i].setY(carsVertical[i].getY() + 4);
+				}
+				
 			}
 
 			InvalidateRect(hwnd, NULL, true);

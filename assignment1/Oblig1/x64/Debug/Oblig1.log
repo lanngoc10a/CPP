@@ -1,6 +1,12 @@
-﻿  Oblig1.cpp
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(366,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(145,7): warning C4101: 'hCirPen': unreferenced local variable
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(144,7): warning C4101: 'hRectPen': unreferenced local variable
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(488,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+﻿  Car.cpp
+  Cars.cpp
+  Oblig1.cpp
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(391,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(147,7): warning C4101: 'hCirPen': unreferenced local variable
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(146,7): warning C4101: 'hRectPen': unreferenced local variable
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(528,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+  Source.cpp
+  TrafficLight.cpp
+  Generating Code...
+LINK : warning LNK4067: ambiguous entry point; selected 'WinMainCRTStartup'
   Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

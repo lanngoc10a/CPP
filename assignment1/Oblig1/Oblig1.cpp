@@ -6,6 +6,8 @@
 #include "Car.h"
 #include "Cars.h"
 #include <iostream>
+#include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -18,10 +20,16 @@ using namespace std;
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-Car carsHorizontal[99];
-Car carsVertical[99];
+
+Car carsHorizontal[200];
+Car carsVertical[200];
+
+queue<Car> queueHorizontal;
+queue<Car> queueVertical;
+
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
+int numberOfCarsInQueue;
 int spawnVerticalCarProbability = 20;
 int spawnHorizontalCarProbability = 50;
 
@@ -146,8 +154,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hDC;			// handle to the device context (permission to draw)
 	PAINTSTRUCT Ps;		// a variable that you need
-	HPEN hRectPen;		// the handle to the red pen
-	HPEN hCirPen;
 
 	HBRUSH rectBrush;
 	HBRUSH cirBrush;
@@ -155,7 +161,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	HBRUSH centerLineBrush;
 	HBRUSH carBrush;
 
-	static int grayRGB[3] = {128, 128, 128};
+	static int grayRGB[3] = { 128, 128, 128 };
 
 	// Red traffic light
 	static int redRGB[3] = { 179,0,6 };
@@ -168,14 +174,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	static bool yellowEnabled = false;
 
 	// Green traffic light
-	static int greenRGB[3] = {127, 204, 40};
+	static int greenRGB[3] = { 127, 204, 40 };
 	static int greenCurrentRGB[3] = { 128, 128, 128 };
 	static bool greenEnabled = false;
 
 	static int carRGB[3] = { 251,208,75 };
 
 	static int loopingDown = true;
-	
+
 	// Rectangle
 	int rectRGB[3] = { 0,0,0 };
 	int rectX = 232;
@@ -200,22 +206,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	int road_vertical_positionX = 500;
 	int road_vertical_positionY = 150;
 
-
-	POINT test[1];
-	test[0].x = 123;
-	static int penSize = 5;
-
 	switch (msg)
 	{
 
 	case WM_CREATE:
 
 		SetTimer(hwnd, ID_TIMER, 2000, NULL);
-		SetTimer(hwnd, ID_TIMER2, 50, NULL);
-		SetTimer(hwnd, ID_TIMER3, 1000, NULL);
-		
+		SetTimer(hwnd, ID_TIMER2, 40, NULL);
+		SetTimer(hwnd, ID_TIMER3, 1500, NULL);
+
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
+
 		return 0;
 
 	case WM_PAINT:
@@ -308,8 +310,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			Cars
 		*/
 		carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
-		
-		
+
+
 		/*
 		for (int i = 0; i < cars.getNumberOfCars(); i++) {
 
@@ -319,54 +321,51 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		}*/
 
+		carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
+
 		for (int i = 0; i < numberOfCarsHorizontal; i++) {
-			
-			carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
+
 			SelectObject(hDC, carBrush);
-			Rectangle(hDC, carsHorizontal[i].getX() + 10
-				, carsHorizontal[i].getY() - 10
-				, carsHorizontal[i].getX() - 25
-				, carsHorizontal[i].getY() + 25);
+			if (carsHorizontal[i].getX() < 900) {
+				Rectangle(hDC, carsHorizontal[i].getX() + 10
+					, carsHorizontal[i].getY() - 10
+					, carsHorizontal[i].getX() - 25
+					, carsHorizontal[i].getY() + 25);
+			}
 
 		}
 
 		for (int i = 0; i < numberOfCarsVertical; i++) {
-			carBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
+
 			SelectObject(hDC, carBrush);
 			Rectangle(hDC, carsVertical[i].getX() + 10
 				, carsVertical[i].getY() - 10
 				, carsVertical[i].getX() - 25
 				, carsVertical[i].getY() + 25);
 
+			if (carsVertical[i].getY() < 600) {
+				Rectangle(hDC, carsVertical[i].getX() + 10
+					, carsVertical[i].getY() - 10
+					, carsVertical[i].getX() - 25
+					, carsVertical[i].getY() + 25);
+			}
 		}
-		
+
+
+
+
+
+
 
 		DeleteObject(centerLineBrush);
 		DeleteObject(carBrush);
 		DeleteObject(roadBrush);
 		DeleteObject(rectBrush);
 		DeleteObject(cirBrush);
-		
+
 
 		EndPaint(hwnd, &Ps);
 		break;
-
-
-	case WM_LBUTTONDOWN:
-
-		carsHorizontal[numberOfCarsHorizontal] = Car(200, 345);
-		numberOfCarsHorizontal++;
-		
-		return 0;
-
-
-	case WM_RBUTTONDOWN:
-
-		carsVertical[numberOfCarsVertical] = Car(507, 56);
-		numberOfCarsVertical++;
-
-		return 0;
-
 
 	case WM_TIMER:
 
@@ -383,15 +382,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				loopingDown = true;
 
 			}
-			else if (redEnabled == true && yellowEnabled == true) {
+
+			else if (loopingDown == true && yellowEnabled == true && greenEnabled == false) {
 				redCurrentRGB[0] = grayRGB[0];
 				redCurrentRGB[1] = grayRGB[1];
 				redCurrentRGB[2] = grayRGB[2];
 
 				redEnabled = false;
-			}
 
-			else if (loopingDown == true && yellowEnabled == true && greenEnabled == false) {
 				yellowCurrentRGB[0] = grayRGB[0];
 				yellowCurrentRGB[1] = grayRGB[1];
 				yellowCurrentRGB[2] = grayRGB[2];
@@ -433,29 +431,44 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 
-			//InvalidateRect(hwnd, NULL, true);
+			InvalidateRect(hwnd, NULL, true);
 
 			return 0;
 
 		case ID_TIMER2:
-	
+
 			for (int i = 0; i < numberOfCarsHorizontal; i++) {
-				if (carsHorizontal[i].getX() == 456 && greenEnabled == false) {
-					carsHorizontal[i].setX(carsHorizontal[i].getX() + 0);
+
+				if ((carsHorizontal[i].getX() == 456 - (queueHorizontal.size() * 60)
+					|| carsHorizontal[i].getX() == 457 - (queueHorizontal.size() * 60)
+					|| carsHorizontal[i].getX() == 455 - (queueHorizontal.size() * 60))
+					&& greenEnabled == false) {
+					queueHorizontal.push(carsHorizontal[i]);
 				}
 				else {
-					carsHorizontal[i].setX(carsHorizontal[i].getX() + 4);
+					if (!queueHorizontal.empty()) {
+						queueHorizontal.pop();
+					}
+
+					carsHorizontal[i].setX(carsHorizontal[i].getX() + 2);
 				}
 			}
 
 			for (int i = 0; i < numberOfCarsVertical; i++) {
-				if (carsVertical[i].getY() == 252 && greenEnabled == false) {
-					carsVertical[i].setY(carsVertical[i].getY() + 0);
+
+				if ((carsVertical[i].getY() == 252 - (queueVertical.size() * 60)
+					|| carsVertical[i].getY() == 253 - (queueVertical.size() * 60)
+					|| carsVertical[i].getY() == 251 - (queueVertical.size() * 60))
+					&& greenEnabled == false) {
+					queueVertical.push(carsVertical[i]);
 				}
 				else {
-					carsVertical[i].setY(carsVertical[i].getY() + 4);
+					if (!queueVertical.empty()) {
+						queueVertical.pop();
+					}
+					carsVertical[i].setY(carsVertical[i].getY() + 2);
 				}
-				
+
 			}
 
 			InvalidateRect(hwnd, NULL, true);
@@ -463,36 +476,36 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		case ID_TIMER3:
-			
+
 			int p_scaledH = (rand() % 100 + 1) + spawnHorizontalCarProbability;
-			if (p_scaledH <= 100) {
+			if (p_scaledH <= 100 && queueHorizontal.size() < 4) {
 				carsHorizontal[numberOfCarsHorizontal] = Car(200, 345);
 				numberOfCarsHorizontal++;
 			}
 
 			int p_scaledV = (rand() % 100 + 1) + spawnVerticalCarProbability;
-			if (p_scaledV <= 100) {
+			if (p_scaledV <= 100 && queueVertical.size() < 4) {
 				carsVertical[numberOfCarsVertical] = Car(507, 56);
 				numberOfCarsVertical++;
 			}
 
 			return 0;
-			
+
 		}
-		
 
 
-	case WM_CLOSE:
-		DestroyWindow(hwnd);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hwnd, msg, wParam, lParam);
-	}
-	return 0;
+		case WM_CLOSE:
+			DestroyWindow(hwnd);
+			break;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default:
+			return DefWindowProc(hwnd, msg, wParam, lParam);
+		}
+		return 0;
 }
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmdShow)

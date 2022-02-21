@@ -11,6 +11,7 @@ using namespace std;
 
 #define ID_TIMER    1
 #define ID_TIMER2	2
+#define ID_TIMER3   3
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -21,6 +22,8 @@ Car carsHorizontal[99];
 Car carsVertical[99];
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
+int spawnVerticalCarProbability = 20;
+int spawnHorizontalCarProbability = 50;
 
 
 // Forward declarations of functions included in this code module:
@@ -209,6 +212,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		SetTimer(hwnd, ID_TIMER, 2000, NULL);
 		SetTimer(hwnd, ID_TIMER2, 50, NULL);
+		SetTimer(hwnd, ID_TIMER3, 1000, NULL);
 		
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
@@ -335,7 +339,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				, carsVertical[i].getY() + 25);
 
 		}
-
 		
 
 		DeleteObject(centerLineBrush);
@@ -458,7 +461,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hwnd, NULL, true);
 
 			return 0;
+
+		case ID_TIMER3:
+			
+			int p_scaledH = (rand() % 100 + 1) + spawnHorizontalCarProbability;
+			if (p_scaledH <= 100) {
+				carsHorizontal[numberOfCarsHorizontal] = Car(200, 345);
+				numberOfCarsHorizontal++;
+			}
+
+			int p_scaledV = (rand() % 100 + 1) + spawnVerticalCarProbability;
+			if (p_scaledV <= 100) {
+				carsVertical[numberOfCarsVertical] = Car(507, 56);
+				numberOfCarsVertical++;
+			}
+
+			return 0;
+			
 		}
+		
+
 
 	case WM_CLOSE:
 		DestroyWindow(hwnd);

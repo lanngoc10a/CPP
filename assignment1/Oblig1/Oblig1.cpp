@@ -13,6 +13,7 @@ using namespace std;
 #define ID_TIMER    1
 #define ID_TIMER2	2
 #define ID_TIMER3   3
+#define ID_TIMER4	4
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -157,46 +158,69 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	HBRUSH carVerticalBrush;
 	HBRUSH carHorizontalBrush;
 
-	
-
-	static int grayRGB[3] = { 128, 128, 128 };
-
-	// Red traffic light
-	static int redRGB[3] = { 179,0,6 };
-	static int redCurrentRGB[3] = { 179, 0, 6 };
-	static bool redEnabled = true;
-
-	// Yellow traffic light
-	static int yellowRGB[3] = { 251,208,75 };
-	static int yellowCurrentRGB[3] = { 128, 128, 128 };
-	static bool yellowEnabled = false;
-
-	// Green traffic light
-	static int greenRGB[3] = { 127, 204, 40 };
-	static int greenCurrentRGB[3] = { 128, 128, 128 };
-	static bool greenEnabled = false;
-
-	static int carRGB[3] = { 251,208,75 };
-
-	static int loopingDown = true;
-
 	// Rectangle
 	int rectRGB[3] = { 0,0,0 };
 	int rectX = 232;
 	int rectY = 337;
 
+	// Static colors
+	static int grayRGB[3] = { 128, 128, 128 };
+	static int redRGB[3] = { 179,0,6 };
+	static int yellowRGB[3] = { 251,208,75 };
+	static int greenRGB[3] = { 127, 204, 40 };
+	static int carRGB[3] = { 251,208,75 };
+
+	/*
+		Light 1
+	*/
+
+	// Red traffic light
+
+	static int light1_redCurrentRGB[3] = { 179, 0, 6 };
+	static bool light1_redEnabled = true;
+
+	// Yellow traffic light
+	
+	static int light1_yellowCurrentRGB[3] = { 128, 128, 128 };
+	static bool light1_yellowEnabled = false;
+
+	// Green traffic light
+	
+	static int light1_greenCurrentRGB[3] = { 128, 128, 128 };
+	static bool light1_greenEnabled = false;
+
+	static int light1_loopingDown = true;
+
+	/*
+		Light 2
+	*/
+
+	// Red traffic light
+
+	static int light2_redCurrentRGB[3] = { 128, 128, 128 };
+	static bool light2_redEnabled = false;
+
+	// Yellow traffic light
+
+	static int light2_yellowCurrentRGB[3] = { 128, 128, 128 };
+	static bool light2_yellowEnabled = false;
+
+	// Green traffic light
+
+	static int light2_greenCurrentRGB[3] = { 127, 204, 40 };
+	static bool light2_greenEnabled = true;
+
+	static int light2_loopingDown = true;
+
+	
+
 	// Light positions
 	int light1_positionX = 430;
-	int light1_positionY = 200;
+	int light1_positionY = 210;
 
-	int light2_positionX = 620;
+	int light2_positionX = 320;
 	int light2_positionY = 600;
 
-	int light3_positionX = 300;
-	int light3_positionY = 600;
-
-	int light4_positionX = 500;
-	int light4_positionY = 600;
 
 	int road_horizontal_positionX = 300;
 	int road_horizontal_positionY = 350;
@@ -214,14 +238,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 
-		SetTimer(hwnd, ID_TIMER, 2000, NULL);
+		SetTimer(hwnd, ID_TIMER, 3000, NULL);
+		SetTimer(hwnd, ID_TIMER4, 3000, NULL);
 		SetTimer(hwnd, ID_TIMER2, 40, NULL);
 		SetTimer(hwnd, ID_TIMER3, 1000, NULL);
 
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
-		spawnHorizontalCarProbability = 0;
-		spawnVerticalCarProbability = 0;
+
+		spawnVerticalCarProbability = 10;
+		spawnHorizontalCarProbability = 50;
+
 		return 0;
 
 	case WM_PAINT:
@@ -237,18 +264,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		Rectangle(hDC, light1_positionX + 25, light1_positionY - 170, light1_positionX - 40, light1_positionY + 25);
 
 		// Create red circle
-		cirBrush = CreateSolidBrush(RGB(redCurrentRGB[0], redCurrentRGB[1], redCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light1_redCurrentRGB[0], 
+			light1_redCurrentRGB[1], light1_redCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 160, light1_positionX - 32, light1_positionY - 110);
 
 		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(yellowCurrentRGB[0], yellowCurrentRGB[1], yellowCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light1_yellowCurrentRGB[0], 
+			light1_yellowCurrentRGB[1], light1_yellowCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 100, light1_positionX - 32, light1_positionY - 50);
 
 
 		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(greenCurrentRGB[0], greenCurrentRGB[1], greenCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light1_greenCurrentRGB[0], 
+			light1_greenCurrentRGB[1], light1_greenCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 40, light1_positionX - 32, light1_positionY + 10);
 
@@ -261,18 +291,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		Rectangle(hDC, light2_positionX + 25, light2_positionY - 170, light2_positionX - 40, light2_positionY + 25);
 
 		// Create red circle
-		cirBrush = CreateSolidBrush(RGB(redCurrentRGB[0], redCurrentRGB[1], redCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light2_redCurrentRGB[0], light2_redCurrentRGB[1]
+			, light2_redCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 160, light2_positionX - 32, light2_positionY - 110);
 
 		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(yellowCurrentRGB[0], yellowCurrentRGB[1], yellowCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light2_yellowCurrentRGB[0], light2_yellowCurrentRGB[1], 
+			light2_yellowCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 100, light2_positionX - 32, light2_positionY - 50);
 
 
 		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(greenCurrentRGB[0], greenCurrentRGB[1], greenCurrentRGB[2]));
+		cirBrush = CreateSolidBrush(RGB(light2_greenCurrentRGB[0], light2_greenCurrentRGB[1], 
+			light2_greenCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 40, light2_positionX - 32, light2_positionY + 10);
 
@@ -358,61 +391,121 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 		case ID_TIMER:
 
-			if (redEnabled == true && yellowEnabled == false) {
-				yellowCurrentRGB[0] = yellowRGB[0];
-				yellowCurrentRGB[1] = yellowRGB[1];
-				yellowCurrentRGB[2] = yellowRGB[2];
+			if (light1_redEnabled == true && light1_yellowEnabled == false) {
+				light1_yellowCurrentRGB[0] = yellowRGB[0];
+				light1_yellowCurrentRGB[1] = yellowRGB[1];
+				light1_yellowCurrentRGB[2] = yellowRGB[2];
 
-				yellowEnabled = true;
-				loopingDown = true;
+				light1_yellowEnabled = true;
+				light1_loopingDown = true;
+
+			}
+
+			else if (light1_loopingDown == true && light1_yellowEnabled == true 
+				&& light1_greenEnabled == false) {
+				light1_redCurrentRGB[0] = grayRGB[0];
+				light1_redCurrentRGB[1] = grayRGB[1];
+				light1_redCurrentRGB[2] = grayRGB[2];
+
+				light1_yellowCurrentRGB[0] = grayRGB[0];
+				light1_yellowCurrentRGB[1] = grayRGB[1];
+				light1_yellowCurrentRGB[2] = grayRGB[2];
+
+				light1_greenCurrentRGB[0] = greenRGB[0];
+				light1_greenCurrentRGB[1] = greenRGB[1];
+				light1_greenCurrentRGB[2] = greenRGB[2];
+				light1_redEnabled = false;
+				light1_yellowEnabled = false;
+				light1_greenEnabled = true;
+
+			}
+			else if (light1_redEnabled == false
+				&& light1_yellowEnabled == false && light1_greenEnabled == true) {
+				light1_greenCurrentRGB[0] = grayRGB[0];
+				light1_greenCurrentRGB[1] = grayRGB[1];
+				light1_greenCurrentRGB[2] = grayRGB[2];
+
+				light1_yellowCurrentRGB[0] = yellowRGB[0];
+				light1_yellowCurrentRGB[1] = yellowRGB[1];
+				light1_yellowCurrentRGB[2] = yellowRGB[2];
+
+				light1_yellowEnabled = true;
+				light1_greenEnabled = false;
+				light1_loopingDown = false;
+			}
+			else if (light1_redEnabled == false && light1_yellowEnabled == true) {
+				light1_yellowCurrentRGB[0] = grayRGB[0];
+				light1_yellowCurrentRGB[1] = grayRGB[1];
+				light1_yellowCurrentRGB[2] = grayRGB[2];
+
+				light1_redCurrentRGB[0] = redRGB[0];
+				light1_redCurrentRGB[1] = redRGB[1];
+				light1_redCurrentRGB[2] = redRGB[2];
+
+				light1_redEnabled = true;
+				light1_yellowEnabled = false;
+			}
+
+			InvalidateRect(hwnd, NULL, true);
+
+			return 0;
+
+		case ID_TIMER4:
+
+			if (light2_redEnabled == true && light2_yellowEnabled == false) {
+				light2_yellowCurrentRGB[0] = yellowRGB[0];
+				light2_yellowCurrentRGB[1] = yellowRGB[1];
+				light2_yellowCurrentRGB[2] = yellowRGB[2];
+
+				light2_yellowEnabled = true;
+				light2_loopingDown = true;
 
 			}
 
-			else if (loopingDown == true && yellowEnabled == true && greenEnabled == false) {
-				redCurrentRGB[0] = grayRGB[0];
-				redCurrentRGB[1] = grayRGB[1];
-				redCurrentRGB[2] = grayRGB[2];
+			else if (light2_loopingDown == true && light2_yellowEnabled == true
+				&& light2_greenEnabled == false) {
+				light2_redCurrentRGB[0] = grayRGB[0];
+				light2_redCurrentRGB[1] = grayRGB[1];
+				light2_redCurrentRGB[2] = grayRGB[2];
 
-				yellowCurrentRGB[0] = grayRGB[0];
-				yellowCurrentRGB[1] = grayRGB[1];
-				yellowCurrentRGB[2] = grayRGB[2];
+				light2_yellowCurrentRGB[0] = grayRGB[0];
+				light2_yellowCurrentRGB[1] = grayRGB[1];
+				light2_yellowCurrentRGB[2] = grayRGB[2];
 
-				greenCurrentRGB[0] = greenRGB[0];
-				greenCurrentRGB[1] = greenRGB[1];
-				greenCurrentRGB[2] = greenRGB[2];
-				redEnabled = false;
-				yellowEnabled = false;
-				greenEnabled = true;
+				light2_greenCurrentRGB[0] = greenRGB[0];
+				light2_greenCurrentRGB[1] = greenRGB[1];
+				light2_greenCurrentRGB[2] = greenRGB[2];
+				light2_redEnabled = false;
+				light2_yellowEnabled = false;
+				light2_greenEnabled = true;
 
 			}
-			else if (redEnabled == false
-				&& yellowEnabled == false && greenEnabled == true) {
-				greenCurrentRGB[0] = grayRGB[0];
-				greenCurrentRGB[1] = grayRGB[1];
-				greenCurrentRGB[2] = grayRGB[2];
+			else if (light2_redEnabled == false
+				&& light2_yellowEnabled == false && light2_greenEnabled == true) {
+				light2_greenCurrentRGB[0] = grayRGB[0];
+				light2_greenCurrentRGB[1] = grayRGB[1];
+				light2_greenCurrentRGB[2] = grayRGB[2];
 
-				yellowCurrentRGB[0] = yellowRGB[0];
-				yellowCurrentRGB[1] = yellowRGB[1];
-				yellowCurrentRGB[2] = yellowRGB[2];
+				light2_yellowCurrentRGB[0] = yellowRGB[0];
+				light2_yellowCurrentRGB[1] = yellowRGB[1];
+				light2_yellowCurrentRGB[2] = yellowRGB[2];
 
-				yellowEnabled = true;
-				greenEnabled = false;
-				loopingDown = false;
+				light2_yellowEnabled = true;
+				light2_greenEnabled = false;
+				light2_loopingDown = false;
 			}
-			else if (redEnabled == false && yellowEnabled == true) {
-				yellowCurrentRGB[0] = grayRGB[0];
-				yellowCurrentRGB[1] = grayRGB[1];
-				yellowCurrentRGB[2] = grayRGB[2];
+			else if (light2_redEnabled == false && light2_yellowEnabled == true) {
+				light2_yellowCurrentRGB[0] = grayRGB[0];
+				light2_yellowCurrentRGB[1] = grayRGB[1];
+				light2_yellowCurrentRGB[2] = grayRGB[2];
 
-				redCurrentRGB[0] = redRGB[0];
-				redCurrentRGB[1] = redRGB[1];
-				redCurrentRGB[2] = redRGB[2];
+				light2_redCurrentRGB[0] = redRGB[0];
+				light2_redCurrentRGB[1] = redRGB[1];
+				light2_redCurrentRGB[2] = redRGB[2];
 
-				redEnabled = true;
-				yellowEnabled = false;
+				light2_redEnabled = true;
+				light2_yellowEnabled = false;
 			}
-
-
 
 			InvalidateRect(hwnd, NULL, true);
 
@@ -422,15 +515,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			for (int i = 0; i < numberOfCarsHorizontal; i++) {
 
-				if ((carsHorizontal[i].getX() == 456 - (queueHorizontal.size() * 60)
-					|| carsHorizontal[i].getX() == 457 - (queueHorizontal.size() * 60)
-					|| carsHorizontal[i].getX() == 455 - (queueHorizontal.size() * 60))
-					&& redEnabled == true) {
-					queueHorizontal.push(carsHorizontal[i]);
-					continue;
+				if ((carsHorizontal[i].getX() == 456 - (queueHorizontal.size() * 60) 
+					|| carsHorizontal[i].getX() == 455 - (queueHorizontal.size() * 60)
+					|| carsHorizontal[i].getX() == 454 - (queueHorizontal.size() * 60)
+					|| carsHorizontal[i].getX() == 458 - (queueHorizontal.size() * 60))
+					&& (light2_redEnabled == true || light2_yellowEnabled == true)) {
+
+						queueHorizontal.push(carsHorizontal[i]);
 				}
 				else {
-					if (!queueHorizontal.empty() && carsVertical[i].getX() > 460) {
+					if (!queueHorizontal.empty() && carsHorizontal[i].getX() > 500) {
 						queueHorizontal.pop();
 					}
 
@@ -441,8 +535,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			for (int i = 0; i < numberOfCarsVertical; i++) {
 
 				if ((carsVertical[i].getY() == 252 - (queueVertical.size() * 60)
-					|| carsVertical[i].getY() == 253 - (queueVertical.size() * 60))
-					&& redEnabled == true) {
+					|| carsVertical[i].getY() == 253 - (queueVertical.size() * 60)
+					|| carsVertical[i].getY() == 254 - (queueVertical.size() * 60)
+					|| carsVertical[i].getY() == 251 - (queueVertical.size() * 60))
+					&& (light1_redEnabled == true || light1_yellowEnabled == true)) {
 
 					queueVertical.push(carsVertical[i]);
 				}

@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+﻿  Oblig1.cpp
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(404,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(465,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(640,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+LINK : warning LNK4067: ambiguous entry point; selected 'WinMainCRTStartup'
+  Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe
+=======
 ﻿  Car.cpp
   Cars.cpp
   Oblig1.cpp
@@ -8,3 +16,4 @@ Q:\VSrepos\Oblig1\assignment1\Oblig1\Oblig1.cpp(577,12): warning C4244: 'return'
   Generating Code...
 LINK : warning LNK4067: ambiguous entry point; selected 'WinMainCRTStartup'
   Oblig1.vcxproj -> Q:\VSrepos\Oblig1\assignment1\Oblig1\x64\Debug\Oblig1.exe
+>>>>>>> eefd421b0d35fa38c111b14f8ad70e45489d8c88

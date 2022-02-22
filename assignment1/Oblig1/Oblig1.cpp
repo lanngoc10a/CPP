@@ -7,6 +7,8 @@
 #include "Cars.h"
 #include <iostream>
 #include <queue>
+#include <cstring>
+#include <atlstr.h>
 
 using namespace std;
 
@@ -21,8 +23,8 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
-Car carsHorizontal[200];
-Car carsVertical[200];
+Car carsHorizontal[1000];
+Car carsVertical[1000];
 
 queue<Car> queueHorizontal;
 queue<Car> queueVertical;
@@ -212,8 +214,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	static int light2_loopingDown = true;
 
-	
-
 	// Light positions
 	int light1_positionX = 430;
 	int light1_positionY = 210;
@@ -221,16 +221,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	int light2_positionX = 320;
 	int light2_positionY = 600;
 
-
 	int road_horizontal_positionX = 300;
 	int road_horizontal_positionY = 350;
 
 	int road_vertical_positionX = 500;
 	int road_vertical_positionY = 150;
 
-	HBRUSH roadBrush = CreateSolidBrush(RGB(grayRGB[0], grayRGB[1], grayRGB[2]));
-	HBRUSH centerLineBrush = CreateSolidBrush(RGB(yellowRGB[0], yellowRGB[1], yellowRGB[2]));
-	HBRUSH rectBrush = CreateSolidBrush(RGB(rectRGB[0], rectRGB[1], rectRGB[2]));
+	
 
 
 	switch (msg)
@@ -240,48 +237,53 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		SetTimer(hwnd, ID_TIMER, 3000, NULL);
 		SetTimer(hwnd, ID_TIMER4, 3000, NULL);
-		SetTimer(hwnd, ID_TIMER2, 40, NULL);
+		SetTimer(hwnd, ID_TIMER2, 50, NULL);
 		SetTimer(hwnd, ID_TIMER3, 1000, NULL);
 
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
 
-		spawnVerticalCarProbability = 10;
-		spawnHorizontalCarProbability = 50;
+		spawnVerticalCarProbability = 40;
+		spawnHorizontalCarProbability = 40;
 
 		return 0;
-
+	
 	case WM_PAINT:
-
+	{
 		hDC = BeginPaint(hwnd, &Ps);
+
+		HBRUSH roadBrush = CreateSolidBrush(RGB(grayRGB[0], grayRGB[1], grayRGB[2]));
+		HBRUSH centerLineBrush = CreateSolidBrush(RGB(yellowRGB[0], yellowRGB[1], yellowRGB[2]));
+		HBRUSH rectBrush = CreateSolidBrush(RGB(rectRGB[0], rectRGB[1], rectRGB[2]));
 
 		/*
 			Light 1
 		*/
 
 		// Create the rectangle
-		SelectObject(hDC, rectBrush);
+		HGDIOBJ horg = SelectObject(hDC, rectBrush);
 		Rectangle(hDC, light1_positionX + 25, light1_positionY - 170, light1_positionX - 40, light1_positionY + 25);
 
 		// Create red circle
-		cirBrush = CreateSolidBrush(RGB(light1_redCurrentRGB[0], 
+		cirBrush = CreateSolidBrush(RGB(light1_redCurrentRGB[0],
 			light1_redCurrentRGB[1], light1_redCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 160, light1_positionX - 32, light1_positionY - 110);
+		DeleteObject(cirBrush);
 
 		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(light1_yellowCurrentRGB[0], 
+		cirBrush = CreateSolidBrush(RGB(light1_yellowCurrentRGB[0],
 			light1_yellowCurrentRGB[1], light1_yellowCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 100, light1_positionX - 32, light1_positionY - 50);
-
+		DeleteObject(cirBrush);
 
 		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(light1_greenCurrentRGB[0], 
+		cirBrush = CreateSolidBrush(RGB(light1_greenCurrentRGB[0],
 			light1_greenCurrentRGB[1], light1_greenCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light1_positionX + 18, light1_positionY - 40, light1_positionX - 32, light1_positionY + 10);
-
+		DeleteObject(cirBrush);
 		/*
 			Light 2
 		*/
@@ -295,25 +297,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			, light2_redCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 160, light2_positionX - 32, light2_positionY - 110);
-
+		DeleteObject(cirBrush);
 		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(light2_yellowCurrentRGB[0], light2_yellowCurrentRGB[1], 
+		cirBrush = CreateSolidBrush(RGB(light2_yellowCurrentRGB[0], light2_yellowCurrentRGB[1],
 			light2_yellowCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 100, light2_positionX - 32, light2_positionY - 50);
-
+		DeleteObject(cirBrush);
 
 		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(light2_greenCurrentRGB[0], light2_greenCurrentRGB[1], 
+		cirBrush = CreateSolidBrush(RGB(light2_greenCurrentRGB[0], light2_greenCurrentRGB[1],
 			light2_greenCurrentRGB[2]));
 		SelectObject(hDC, cirBrush);
 		Ellipse(hDC, light2_positionX + 18, light2_positionY - 40, light2_positionX - 32, light2_positionY + 10);
-
+		DeleteObject(cirBrush);
 
 		/*
 			Roads
 		*/
-		
+
 		SelectObject(hDC, roadBrush);
 
 		//Horizontal road
@@ -333,6 +335,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		Rectangle(hDC, road_vertical_positionX + 20, road_vertical_positionY - 150
 			, road_vertical_positionX + 25, road_vertical_positionY + 450);
+		DeleteObject(centerLineBrush);
 
 		/*
 			Intersection square
@@ -340,6 +343,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		SelectObject(hDC, roadBrush);
 		Rectangle(hDC, road_vertical_positionX + 70, road_horizontal_positionY - 70
 			, road_vertical_positionX - 25, road_horizontal_positionY + 25);
+		DeleteObject(roadBrush);
 
 		/*
 			Cars
@@ -369,21 +373,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					, carsVertical[i].getX() - 25
 					, carsVertical[i].getY() + 25);
 			}
-			else {
-				DeleteObject(carVerticalBrush);
-			}
 		}
 
-		DeleteObject(centerLineBrush);
+		SelectObject(hDC, horg);
 		DeleteObject(carVerticalBrush);
 		DeleteObject(carHorizontalBrush);
 		DeleteObject(roadBrush);
+		DeleteObject(centerLineBrush);
 		DeleteObject(rectBrush);
 		DeleteObject(cirBrush);
 
-		ReleaseDC(hwnd, hDC);
 		EndPaint(hwnd, &Ps);
 		break;
+	}
+
+	
 
 	case WM_TIMER:
 
@@ -520,7 +524,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					|| carsHorizontal[i].getX() == 454 - (queueHorizontal.size() * 60)
 					|| carsHorizontal[i].getX() == 458 - (queueHorizontal.size() * 60))
 					&& (light2_redEnabled == true || light2_yellowEnabled == true)) {
-
+						
 						queueHorizontal.push(carsHorizontal[i]);
 				}
 				else {

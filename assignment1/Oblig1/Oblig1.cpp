@@ -29,8 +29,8 @@ queue<Car> queueVertical;
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
 int numberOfCarsInQueue;
-int spawnVerticalCarProbability = 0.2;
-int spawnHorizontalCarProbability = 20;
+int spawnVerticalCarProbability;
+int spawnHorizontalCarProbability;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -220,8 +220,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
-		spawnHorizontalCarProbability = 50;
-		spawnVerticalCarProbability = 50;
+		spawnHorizontalCarProbability = 0;
+		spawnVerticalCarProbability = 0;
 		return 0;
 
 	case WM_PAINT:
@@ -460,20 +460,53 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case ID_TIMER3:
 
-			int p_scaledH = (rand() % 100 + 1) + spawnHorizontalCarProbability;
-			if (p_scaledH <= 100 && queueHorizontal.size() < 6) {
+			int p_scaledH = (rand() % 101) + spawnHorizontalCarProbability;
+			if (p_scaledH >= 100 && queueHorizontal.size() < 6) {
 				carsHorizontal[numberOfCarsHorizontal] = Car(0, 345);
 				numberOfCarsHorizontal++;
 			}
 
-			int p_scaledV = (rand() % 100 + 1) + spawnVerticalCarProbability;
-			if (p_scaledV <= 100 && queueVertical.size() < 4) {
+			int p_scaledV = (rand() % 101) + spawnVerticalCarProbability;
+			if (p_scaledV >= 100 && queueVertical.size() < 4) {
 				carsVertical[numberOfCarsVertical] = Car(507, 0);
 				numberOfCarsVertical++;
 			}
 
 			return 0;
 		}
+
+		case WM_KEYDOWN:
+			
+			if (wParam == VK_RIGHT)
+			{
+				if (spawnHorizontalCarProbability <= 100)
+				{
+					spawnHorizontalCarProbability = spawnHorizontalCarProbability + 10;
+				}
+			}
+			if (wParam == VK_LEFT)
+			{
+				if (spawnHorizontalCarProbability >= 0)
+				{
+					spawnHorizontalCarProbability = spawnHorizontalCarProbability - 10;
+				}
+			}
+			if (wParam == VK_UP)
+			{
+				if (spawnVerticalCarProbability <= 100)
+				{
+					spawnVerticalCarProbability = spawnVerticalCarProbability + 10;
+				}
+			}
+			if (wParam == VK_DOWN)
+			{
+				if (spawnVerticalCarProbability >= 0)
+				{
+					spawnVerticalCarProbability = spawnVerticalCarProbability - 10;
+				}
+			}
+
+			return 0;
 
 		case WM_CLOSE:
 			DestroyWindow(hwnd);

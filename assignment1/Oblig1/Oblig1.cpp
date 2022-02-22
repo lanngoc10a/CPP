@@ -22,8 +22,8 @@ Car carsHorizontal[99];
 Car carsVertical[99];
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
-int spawnVerticalCarProbability = 20;
-int spawnHorizontalCarProbability = 50;
+int spawnVerticalCarProbability;
+int spawnHorizontalCarProbability;
 
 
 // Forward declarations of functions included in this code module:
@@ -216,6 +216,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
+		spawnHorizontalCarProbability = 50;
+		spawnVerticalCarProbability = 50;
 		return 0;
 
 	case WM_PAINT:

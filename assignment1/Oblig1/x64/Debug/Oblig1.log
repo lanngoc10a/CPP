@@ -1,10 +1,5 @@
-﻿  Car.cpp
-  Cars.cpp
-  Oblig1.cpp
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(386,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(563,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
-  Source.cpp
-  TrafficLight.cpp
-  Generating Code...
-LINK : warning LNK4067: ambiguous entry point; selected 'WinMainCRTStartup'
+﻿  Oblig1.cpp
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(32,33): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(373,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(546,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
   Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

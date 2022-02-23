@@ -227,10 +227,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	int road_vertical_positionX = 500;
 	int road_vertical_positionY = 150;
 
-	
-	TCHAR text[256];
-	swprintf_s(text, 256, L"Points: %d", spawnHorizontalCarProbability);
+	// Probability text
+	int probabilityText_1X = 50;
+	int probabilityText_1Y = 200;
+	int probabilityText_2X = 50;
+	int probabilityText_2Y = 230;
 
+	TCHAR text[256];
+	swprintf_s(text, 256, L"Horizontal Car Spawn Probability: %d", spawnHorizontalCarProbability);
+	swprintf_s(text, 256, L"Vertical Car Spawn Probability: %d", spawnVerticalCarProbability);
 
 	switch (msg)
 	{
@@ -355,6 +360,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		Rectangle(hDC, road_vertical_positionX + 70, road_horizontal_positionY - 70
 			, road_vertical_positionX - 25, road_horizontal_positionY + 25);
 		DeleteObject(roadBrush);
+
+		/*
+			Probability text
+		*/
+
+		SelectObject(hDC, rectBrush);
+		text[256];
+		swprintf_s(text, 256, L"Horizontal Car Spawn Probability: %d", spawnHorizontalCarProbability);	// Horizontal car spawn text
+		TextOut(hDC, probabilityText_1X, probabilityText_1Y, text, wcslen(text));
+		swprintf_s(text, 256, L"Vertical Car Spawn Probability: %d", spawnVerticalCarProbability);	// Vertical car spawn text
+		TextOut(hDC, probabilityText_2X, probabilityText_2Y, text, wcslen(text));
 
 		/*
 			Cars
@@ -595,28 +611,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			
 			if (wParam == VK_RIGHT)
 			{
-				if (spawnHorizontalCarProbability <= 100)
+				if (spawnHorizontalCarProbability <= 90)
 				{
 					spawnHorizontalCarProbability = spawnHorizontalCarProbability + 10;
 				}
 			}
 			if (wParam == VK_LEFT)
 			{
-				if (spawnHorizontalCarProbability >= 0)
+				if (spawnHorizontalCarProbability >= 10)
 				{
 					spawnHorizontalCarProbability = spawnHorizontalCarProbability - 10;
 				}
 			}
 			if (wParam == VK_UP)
 			{
-				if (spawnVerticalCarProbability <= 100)
+				if (spawnVerticalCarProbability <= 90)
 				{
 					spawnVerticalCarProbability = spawnVerticalCarProbability + 10;
 				}
 			}
 			if (wParam == VK_DOWN)
 			{
-				if (spawnVerticalCarProbability >= 0)
+				if (spawnVerticalCarProbability >= 10)
 				{
 					spawnVerticalCarProbability = spawnVerticalCarProbability - 10;
 				}

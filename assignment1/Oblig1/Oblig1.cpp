@@ -4,7 +4,6 @@
 #include "framework.h"
 #include "Oblig1.h"
 #include "Car.h"
-#include "Cars.h"
 #include <iostream>
 #include <queue>
 #include <cstring>
@@ -31,7 +30,7 @@ queue<Car> queueVertical;
 
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
-int numberOfCarsInQueue;
+
 int spawnVerticalCarProbability;
 int spawnHorizontalCarProbability;
 
@@ -261,7 +260,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			numberOfCarsHorizontal++;
 		}
 		
-
 		return 0;
 	
 	case WM_PAINT:
@@ -335,27 +333,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		SelectObject(hDC, roadBrush);
 
 		//Horizontal road
-		Rectangle(hDC, road_horizontal_positionX + 600, road_horizontal_positionY - 70
+		Rectangle(hDC, road_horizontal_positionX + 1000, road_horizontal_positionY - 70
 			, road_horizontal_positionX - 300, road_horizontal_positionY + 25);
 
 		// Vertical road
 		Rectangle(hDC, road_vertical_positionX + 70, road_vertical_positionY - 150
-			, road_vertical_positionX - 25, road_vertical_positionY + 450);
+			, road_vertical_positionX - 25, road_vertical_positionY + 600);
 
 		/*
 			Center lane lines
 		*/
 		SelectObject(hDC, centerLineBrush);
-		Rectangle(hDC, road_horizontal_positionX + 550, road_horizontal_positionY - 20
+		Rectangle(hDC, road_horizontal_positionX + 1000, road_horizontal_positionY - 20
 			, road_horizontal_positionX - 300, road_horizontal_positionY - 25);
 
 		Rectangle(hDC, road_vertical_positionX + 20, road_vertical_positionY - 150
-			, road_vertical_positionX + 25, road_vertical_positionY + 450);
+			, road_vertical_positionX + 25, road_vertical_positionY + 600);
 		DeleteObject(centerLineBrush);
 
 		/*
 			Intersection square
 		*/
+
 		SelectObject(hDC, roadBrush);
 		Rectangle(hDC, road_vertical_positionX + 70, road_horizontal_positionY - 70
 			, road_vertical_positionX - 25, road_horizontal_positionY + 25);
@@ -372,50 +371,57 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		swprintf_s(text, 256, L"Vertical Car Spawn Probability: %d", spawnVerticalCarProbability);	// Vertical car spawn text
 		TextOut(hDC, probabilityText_2X, probabilityText_2Y, text, wcslen(text));
 
+		swprintf_s(text, 256, L"Number of cars: %d", (numberOfCarsHorizontal + numberOfCarsVertical - 10));	// Horizontal car spawn text
+		TextOut(hDC, 50, 400, text, wcslen(text));
+
 		/*
 			Cars
 		*/
 
-		carVerticalBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
-		carHorizontalBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
-
 		for (int i = 5; i < numberOfCarsHorizontal; i++) {
 
+			carHorizontalBrush = CreateSolidBrush(RGB(carsHorizontal[i].getR()
+				, carsHorizontal[i].getG(), carsHorizontal[i].getB()));
 			SelectObject(hDC, carHorizontalBrush);
 
-			if (carsHorizontal[i].getX() < 900) {
+			if (carsHorizontal[i].getX() < 1300) {
 				Rectangle(hDC, carsHorizontal[i].getX() + 10
 					, carsHorizontal[i].getY() - 5
 					, carsHorizontal[i].getX() - 25
 					, carsHorizontal[i].getY() + 20);
 			}
+
+			DeleteObject(carHorizontalBrush);
 		}
 
 		for (int i = 5; i < numberOfCarsVertical; i++) {
 
+			carVerticalBrush = CreateSolidBrush(RGB(carsVertical[i].getR(), 
+				carsVertical[i].getG(), carsVertical[i].getB()));
+
 			SelectObject(hDC, carVerticalBrush);
 
-			if (carsVertical[i].getY() < 600) {
+			if (carsVertical[i].getY() < 800) {
 				Rectangle(hDC, carsVertical[i].getX() + 5
 					, carsVertical[i].getY() - 10
 					, carsVertical[i].getX() - 20
 					, carsVertical[i].getY() + 25);
 			}
+
+			DeleteObject(carVerticalBrush);
 		}
 
 		SelectObject(hDC, horg);
-		DeleteObject(carVerticalBrush);
-		DeleteObject(carHorizontalBrush);
+		
 		DeleteObject(roadBrush);
 		DeleteObject(centerLineBrush);
 		DeleteObject(rectBrush);
 		DeleteObject(cirBrush);
 
 		EndPaint(hwnd, &Ps);
-		break;
-	}
 
-	
+		return 0;
+	}
 
 	case WM_TIMER:
 
@@ -425,20 +431,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (light1_redEnabled == true && light1_yellowEnabled == false) {
 
-				light1_yellowEnabled = true;
-				light1_loopingDown = true;
 				light1_yellowCurrentRGB[0] = yellowRGB[0];
 				light1_yellowCurrentRGB[1] = yellowRGB[1];
 				light1_yellowCurrentRGB[2] = yellowRGB[2];
 
-
+				light1_yellowEnabled = true;
+				light1_loopingDown = true;
 			}
 
 			else if (light1_loopingDown == true && light1_yellowEnabled == true 
 				&& light1_greenEnabled == false) {
-				light1_redEnabled = false;
-				light1_yellowEnabled = false;
-				light1_greenEnabled = true;
+				
 				light1_redCurrentRGB[0] = grayRGB[0];
 				light1_redCurrentRGB[1] = grayRGB[1];
 				light1_redCurrentRGB[2] = grayRGB[2];
@@ -451,13 +454,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				light1_greenCurrentRGB[1] = greenRGB[1];
 				light1_greenCurrentRGB[2] = greenRGB[2];
 
-
+				light1_redEnabled = false;
+				light1_yellowEnabled = false;
+				light1_greenEnabled = true;
 			}
 			else if (light1_redEnabled == false
 				&& light1_yellowEnabled == false && light1_greenEnabled == true) {
-				light1_yellowEnabled = true;
-				light1_greenEnabled = false;
-				light1_loopingDown = false;
+
 				light1_greenCurrentRGB[0] = grayRGB[0];
 				light1_greenCurrentRGB[1] = grayRGB[1];
 				light1_greenCurrentRGB[2] = grayRGB[2];
@@ -466,11 +469,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				light1_yellowCurrentRGB[1] = yellowRGB[1];
 				light1_yellowCurrentRGB[2] = yellowRGB[2];
 
-
+				light1_yellowEnabled = true;
+				light1_greenEnabled = false;
+				light1_loopingDown = false;
 			}
 			else if (light1_redEnabled == false && light1_yellowEnabled == true) {
-				light1_redEnabled = true;
-				light1_yellowEnabled = false;
 				light1_yellowCurrentRGB[0] = grayRGB[0];
 				light1_yellowCurrentRGB[1] = grayRGB[1];
 				light1_yellowCurrentRGB[2] = grayRGB[2];
@@ -479,10 +482,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				light1_redCurrentRGB[1] = redRGB[1];
 				light1_redCurrentRGB[2] = redRGB[2];
 
-		
+				light1_redEnabled = true;
+				light1_yellowEnabled = false;
 			}
-
-			//InvalidateRect(hwnd, NULL, true);
 
 			return 0;
 
@@ -578,31 +580,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 
-			if (wait < 201) {
+			if (wait < 121) {
 				wait += 2;
 			}
 			
 			InvalidateRect(hwnd, NULL, true);
 
-			break;
+			return 0;
 
 		case SpawnCars:
 
 			if (wait > 120) {
 				int p_scaledH = (rand() % 101) + spawnHorizontalCarProbability;
-				if (p_scaledH >= 100 && queueHorizontal.size() < 7) {
-					carsHorizontal[numberOfCarsHorizontal] = Car(0, 345);
+				if (p_scaledH >= 100 && queueHorizontal.size() < 8) {
+					carsHorizontal[numberOfCarsHorizontal] = Car(0, 345, (rand() + 256), (rand() + 256), (rand() + 256));
 					numberOfCarsHorizontal++;
 				}
 
 				int p_scaledV = (rand() % 101) + spawnVerticalCarProbability;
 				if (p_scaledV >= 100 && queueVertical.size() < 5) {
-					carsVertical[numberOfCarsVertical] = Car(507, 0);
+					carsVertical[numberOfCarsVertical] = Car(507, 0, (rand() + 256), (rand() + 256), (rand() + 256));
 					numberOfCarsVertical++;
 				}
 			}
-
-			
 
 			return 0;
 		}

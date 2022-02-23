@@ -12,10 +12,10 @@
 
 using namespace std;
 
-#define ID_TIMER    1
-#define ID_TIMER2	2
-#define ID_TIMER3   3
-#define ID_TIMER4	4
+#define TrafficLight_1    1
+#define TrafficLight_2	2
+#define SpawnCars   3
+#define MoveCars	4
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -157,8 +157,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT Ps;		// a variable that you need
 
 	HBRUSH cirBrush;
-	//HBRUSH roadBrush;
-	//HBRUSH centerLineBrush;
 	HBRUSH carVerticalBrush;
 	HBRUSH carHorizontalBrush;
 
@@ -217,11 +215,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	static int light2_loopingDown = true;
 
 	// Light positions
-	int light1_positionX = 430;
-	int light1_positionY = 210;
+	int light1_positionX = 435;
+	int light1_positionY = 200;
 
 	int light2_positionX = 320;
-	int light2_positionY = 600;
+	int light2_positionY = 550;
 
 	int road_horizontal_positionX = 300;
 	int road_horizontal_positionY = 350;
@@ -229,15 +227,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	int road_vertical_positionX = 500;
 	int road_vertical_positionY = 150;
 
+	
+	TCHAR text[256];
+	swprintf_s(text, 256, L"Points: %d", spawnHorizontalCarProbability);
+
+
 	switch (msg)
 	{
 
 	case WM_CREATE:
 
-		SetTimer(hwnd, ID_TIMER, 2000, NULL);
-		SetTimer(hwnd, ID_TIMER4, 2000, NULL);
-		SetTimer(hwnd, ID_TIMER2, 50, NULL);
-		SetTimer(hwnd, ID_TIMER3, 1000, NULL);
+		SetTimer(hwnd, TrafficLight_1, 2000, NULL);
+		SetTimer(hwnd, TrafficLight_2, 2000, NULL);
+		SetTimer(hwnd, MoveCars, 50, NULL);
+		SetTimer(hwnd, SpawnCars, 1000, NULL);
 
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
@@ -356,6 +359,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		/*
 			Cars
 		*/
+
 		carVerticalBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
 		carHorizontalBrush = CreateSolidBrush(RGB(carRGB[0], carRGB[1], carRGB[2]));
 
@@ -365,9 +369,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (carsHorizontal[i].getX() < 900) {
 				Rectangle(hDC, carsHorizontal[i].getX() + 10
-					, carsHorizontal[i].getY() - 10
+					, carsHorizontal[i].getY() - 5
 					, carsHorizontal[i].getX() - 25
-					, carsHorizontal[i].getY() + 25);
+					, carsHorizontal[i].getY() + 20);
 			}
 		}
 
@@ -376,9 +380,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			SelectObject(hDC, carVerticalBrush);
 
 			if (carsVertical[i].getY() < 600) {
-				Rectangle(hDC, carsVertical[i].getX() + 10
+				Rectangle(hDC, carsVertical[i].getX() + 5
 					, carsVertical[i].getY() - 10
-					, carsVertical[i].getX() - 25
+					, carsVertical[i].getX() - 20
 					, carsVertical[i].getY() + 25);
 			}
 		}
@@ -401,7 +405,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		switch (wParam)
 		{
-		case ID_TIMER:
+		case TrafficLight_1:
 
 			if (light1_redEnabled == true && light1_yellowEnabled == false) {
 
@@ -462,11 +466,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		
 			}
 
-			InvalidateRect(hwnd, NULL, true);
+			//InvalidateRect(hwnd, NULL, true);
 
 			return 0;
 
-		case ID_TIMER4:
+		case TrafficLight_2:
 
 			if (light2_redEnabled == true && light2_yellowEnabled == false) {
 				light2_yellowCurrentRGB[0] = yellowRGB[0];
@@ -523,11 +527,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				light2_yellowEnabled = false;
 			}
 
-			InvalidateRect(hwnd, NULL, true);
-
 			return 0;
 
-		case ID_TIMER2:
+		case MoveCars:
 
 			for (int i = 0; i < numberOfCarsHorizontal; i++) {
 
@@ -568,7 +570,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			break;
 
-		case ID_TIMER3:
+		case SpawnCars:
 
 			if (wait > 120) {
 				int p_scaledH = (rand() % 101) + spawnHorizontalCarProbability;

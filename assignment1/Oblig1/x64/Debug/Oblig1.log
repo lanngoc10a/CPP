@@ -1,5 +1,5 @@
 ﻿  Oblig1.cpp
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(417,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(481,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(699,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(421,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(485,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(693,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
   Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

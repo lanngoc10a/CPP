@@ -27,13 +27,7 @@
     <ClInclude Include="Oblig1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TrafficLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Car.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,16 +35,10 @@
     <ClCompile Include="Oblig1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TrafficLight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Car.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Cars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

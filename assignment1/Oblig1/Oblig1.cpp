@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "Oblig1.h"
 #include "Car.h"
+#include "TrafficLight.h"
 #include <iostream>
 #include <queue>
 #include <cstring>
@@ -11,10 +12,9 @@
 
 using namespace std;
 
-#define TrafficLight_1    1
-#define TrafficLight_2	2
-#define SpawnCars   3
-#define MoveCars	4
+#define TrafficLights    1
+#define SpawnCars   2
+#define MoveCars	3
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -24,12 +24,20 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 Car carsHorizontal[1000];
 Car carsVertical[1000];
+Car carsHorizontalEast[1000];
+Car carsVerticalSouth[1000];
+
+TrafficLight lights[4];
 
 queue<Car> queueHorizontal;
 queue<Car> queueVertical;
+queue<Car> queueHorizontalEast;
+queue<Car> queueVerticalSouth;
 
 int numberOfCarsHorizontal;
 int numberOfCarsVertical;
+int numberOfCarsHorizontalEast;
+int numberOfCarsVerticalSouth;
 
 int spawnVerticalCarProbability;
 int spawnHorizontalCarProbability;
@@ -161,8 +169,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	// Rectangle
 	int rectRGB[3] = { 0,0,0 };
-	int rectX = 232;
-	int rectY = 337;
 
 	// Static colors
 	static int grayRGB[3] = { 128, 128, 128 };
@@ -170,55 +176,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	static int yellowRGB[3] = { 251,208,75 };
 	static int greenRGB[3] = { 127, 204, 40 };
 	static int carRGB[3] = { 251,208,75 };
-
-	/*
-		Light 1
-	*/
-
-	// Red traffic light
-
-	static int light1_redCurrentRGB[3] = { 179, 0, 6 };
-	static bool light1_redEnabled = true;
-
-	// Yellow traffic light
-	
-	static int light1_yellowCurrentRGB[3] = { 128, 128, 128 };
-	static bool light1_yellowEnabled = false;
-
-	// Green traffic light
-	
-	static int light1_greenCurrentRGB[3] = { 128, 128, 128 };
-	static bool light1_greenEnabled = false;
-
-	static int light1_loopingDown = true;
-
-	/*
-		Light 2
-	*/
-
-	// Red traffic light
-
-	static int light2_redCurrentRGB[3] = { 128, 128, 128 };
-	static bool light2_redEnabled = false;
-
-	// Yellow traffic light
-
-	static int light2_yellowCurrentRGB[3] = { 128, 128, 128 };
-	static bool light2_yellowEnabled = false;
-
-	// Green traffic light
-
-	static int light2_greenCurrentRGB[3] = { 127, 204, 40 };
-	static bool light2_greenEnabled = true;
-
-	static int light2_loopingDown = true;
-
-	// Light positions
-	int light1_positionX = 435;
-	int light1_positionY = 200;
-
-	int light2_positionX = 320;
-	int light2_positionY = 550;
 
 	int road_horizontal_positionX = 300;
 	int road_horizontal_positionY = 350;
@@ -241,16 +198,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 
-		SetTimer(hwnd, TrafficLight_1, 2000, NULL);
-		SetTimer(hwnd, TrafficLight_2, 2000, NULL);
+		SetTimer(hwnd, TrafficLights, 2000, NULL);
 		SetTimer(hwnd, MoveCars, 50, NULL);
 		SetTimer(hwnd, SpawnCars, 1000, NULL);
 
 		numberOfCarsHorizontal = 0;
 		numberOfCarsVertical = 0;
+		numberOfCarsHorizontalEast = 0;
+		numberOfCarsVerticalSouth = 0;
 
 		spawnVerticalCarProbability = 40;
 		spawnHorizontalCarProbability = 40;
+
+		lights[0] = TrafficLight(435, 200, 0);
+		lights[1] = TrafficLight(320, 550, 2);
+		lights[2] = TrafficLight(760, 250, 2);
+		lights[3] = TrafficLight(620, 580, 0);
 
 		
 		for (int i = 0; i < 5; i++) {
@@ -258,6 +221,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			numberOfCarsVertical++;
 			carsHorizontal[numberOfCarsHorizontal] = Car(0, 345);
 			numberOfCarsHorizontal++;
+			carsVerticalSouth[numberOfCarsVerticalSouth] = Car(540, 700);
+			numberOfCarsVerticalSouth++;
+			carsHorizontalEast[numberOfCarsHorizontalEast] = Car(1000, 340);
+			numberOfCarsHorizontalEast++;
 		}
 		
 		return 0;
@@ -270,61 +237,40 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		HBRUSH centerLineBrush = CreateSolidBrush(RGB(yellowRGB[0], yellowRGB[1], yellowRGB[2]));
 		HBRUSH rectBrush = CreateSolidBrush(RGB(rectRGB[0], rectRGB[1], rectRGB[2]));
 
-		/*
-			Light 1
-		*/
-
-		// Create the rectangle
 		HGDIOBJ horg = SelectObject(hDC, rectBrush);
-		Rectangle(hDC, light1_positionX + 25, light1_positionY - 170, light1_positionX - 40, light1_positionY + 25);
 
-		// Create red circle
-		cirBrush = CreateSolidBrush(RGB(light1_redCurrentRGB[0],
-			light1_redCurrentRGB[1], light1_redCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light1_positionX + 18, light1_positionY - 160, light1_positionX - 32, light1_positionY - 110);
-		DeleteObject(cirBrush);
+		for (int i = 0; i < 4; i++) {
+			SelectObject(hDC, rectBrush);
+			Rectangle(hDC, lights[i].getX() + 25, lights[i].getY() - 170,
+				lights[i].getX() - 40, lights[i].getY() + 25);
 
-		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(light1_yellowCurrentRGB[0],
-			light1_yellowCurrentRGB[1], light1_yellowCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light1_positionX + 18, light1_positionY - 100, light1_positionX - 32, light1_positionY - 50);
-		DeleteObject(cirBrush);
+			int* currentRed = lights[i].getRed();
 
-		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(light1_greenCurrentRGB[0],
-			light1_greenCurrentRGB[1], light1_greenCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light1_positionX + 18, light1_positionY - 40, light1_positionX - 32, light1_positionY + 10);
-		DeleteObject(cirBrush);
-		/*
-			Light 2
-		*/
+			cirBrush = CreateSolidBrush(RGB(currentRed[0],
+				currentRed[1], currentRed[2]));
+			SelectObject(hDC, cirBrush);
+			Ellipse(hDC, lights[i].getX() + 18, lights[i].getY() - 160
+				, lights[i].getX() - 32, lights[i].getY() - 110);
+			DeleteObject(cirBrush);
 
-		// Create the rectangle
-		SelectObject(hDC, rectBrush);
-		Rectangle(hDC, light2_positionX + 25, light2_positionY - 170, light2_positionX - 40, light2_positionY + 25);
+			int* currentYellow = lights[i].getYellow();
 
-		// Create red circle
-		cirBrush = CreateSolidBrush(RGB(light2_redCurrentRGB[0], light2_redCurrentRGB[1]
-			, light2_redCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light2_positionX + 18, light2_positionY - 160, light2_positionX - 32, light2_positionY - 110);
-		DeleteObject(cirBrush);
-		// Create yellow circle
-		cirBrush = CreateSolidBrush(RGB(light2_yellowCurrentRGB[0], light2_yellowCurrentRGB[1],
-			light2_yellowCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light2_positionX + 18, light2_positionY - 100, light2_positionX - 32, light2_positionY - 50);
-		DeleteObject(cirBrush);
+			cirBrush = CreateSolidBrush(RGB(currentYellow[0],
+				currentYellow[1], currentYellow[2]));
+			SelectObject(hDC, cirBrush);
+			Ellipse(hDC, lights[i].getX() + 18, lights[i].getY() - 100
+				, lights[i].getX() - 32, lights[i].getY() - 50);
+			DeleteObject(cirBrush);
 
-		// Create green circle
-		cirBrush = CreateSolidBrush(RGB(light2_greenCurrentRGB[0], light2_greenCurrentRGB[1],
-			light2_greenCurrentRGB[2]));
-		SelectObject(hDC, cirBrush);
-		Ellipse(hDC, light2_positionX + 18, light2_positionY - 40, light2_positionX - 32, light2_positionY + 10);
-		DeleteObject(cirBrush);
+			int* currentGreen = lights[i].getGreen();
+
+			cirBrush = CreateSolidBrush(RGB(currentGreen[0],
+				currentGreen[1], currentGreen[2]));
+			SelectObject(hDC, cirBrush);
+			Ellipse(hDC, lights[i].getX() + 18, lights[i].getY() - 40
+				, lights[i].getX() - 32, lights[i].getY() + 10);
+			DeleteObject(cirBrush);
+		}
 
 		/*
 			Roads
@@ -343,6 +289,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		/*
 			Center lane lines
 		*/
+
 		SelectObject(hDC, centerLineBrush);
 		Rectangle(hDC, road_horizontal_positionX + 1000, road_horizontal_positionY - 20
 			, road_horizontal_positionX - 300, road_horizontal_positionY - 25);
@@ -371,7 +318,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		swprintf_s(text, 256, L"Vertical Car Spawn Probability: %d", spawnVerticalCarProbability);	// Vertical car spawn text
 		TextOut(hDC, probabilityText_2X, probabilityText_2Y, text, wcslen(text));
 
-		swprintf_s(text, 256, L"Number of cars: %d", (numberOfCarsHorizontal + numberOfCarsVertical - 10));	// Horizontal car spawn text
+		swprintf_s(text, 256, L"Number of cars: %d", (numberOfCarsHorizontal 
+			+ numberOfCarsVertical + numberOfCarsVerticalSouth + numberOfCarsHorizontalEast - 20));	// Horizontal car spawn text
 		TextOut(hDC, 50, 400, text, wcslen(text));
 
 		/*
@@ -394,6 +342,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(carHorizontalBrush);
 		}
 
+		for (int i = 5; i < numberOfCarsHorizontalEast; i++) {
+
+			carHorizontalBrush = CreateSolidBrush(RGB(carsHorizontalEast[i].getR()
+				, carsHorizontalEast[i].getG(), carsHorizontalEast[i].getB()));
+			SelectObject(hDC, carHorizontalBrush);
+
+			if (carsHorizontalEast[i].getX() < 1300) {
+				Rectangle(hDC, carsHorizontalEast[i].getX() + 10
+					, carsHorizontalEast[i].getY() - 5
+					, carsHorizontalEast[i].getX() - 25
+					, carsHorizontalEast[i].getY() + 20);
+			}
+
+			DeleteObject(carHorizontalBrush);
+		}
+
 		for (int i = 5; i < numberOfCarsVertical; i++) {
 
 			carVerticalBrush = CreateSolidBrush(RGB(carsVertical[i].getR(), 
@@ -411,6 +375,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(carVerticalBrush);
 		}
 
+		for (int i = 5; i < numberOfCarsVerticalSouth; i++) {
+
+			carVerticalBrush = CreateSolidBrush(RGB(carsVerticalSouth[i].getR(),
+				carsVerticalSouth[i].getG(), carsVerticalSouth[i].getB()));
+
+			SelectObject(hDC, carVerticalBrush);
+
+			if (carsVerticalSouth[i].getY() > 0)
+				Rectangle(hDC, carsVerticalSouth[i].getX() + 5
+					, carsVerticalSouth[i].getY() - 10
+					, carsVerticalSouth[i].getX() - 20
+					, carsVerticalSouth[i].getY() + 25);
+			
+
+			DeleteObject(carVerticalBrush);
+		}
+		
 		SelectObject(hDC, horg);
 		
 		DeleteObject(roadBrush);
@@ -427,122 +408,27 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		switch (wParam)
 		{
-		case TrafficLight_1:
+		case TrafficLights:
 
-			if (light1_redEnabled == true && light1_yellowEnabled == false) {
-
-				light1_yellowCurrentRGB[0] = yellowRGB[0];
-				light1_yellowCurrentRGB[1] = yellowRGB[1];
-				light1_yellowCurrentRGB[2] = yellowRGB[2];
-
-				light1_yellowEnabled = true;
-				light1_loopingDown = true;
-			}
-
-			else if (light1_loopingDown == true && light1_yellowEnabled == true 
-				&& light1_greenEnabled == false) {
-				
-				light1_redCurrentRGB[0] = grayRGB[0];
-				light1_redCurrentRGB[1] = grayRGB[1];
-				light1_redCurrentRGB[2] = grayRGB[2];
-
-				light1_yellowCurrentRGB[0] = grayRGB[0];
-				light1_yellowCurrentRGB[1] = grayRGB[1];
-				light1_yellowCurrentRGB[2] = grayRGB[2];
-
-				light1_greenCurrentRGB[0] = greenRGB[0];
-				light1_greenCurrentRGB[1] = greenRGB[1];
-				light1_greenCurrentRGB[2] = greenRGB[2];
-
-				light1_redEnabled = false;
-				light1_yellowEnabled = false;
-				light1_greenEnabled = true;
-			}
-			else if (light1_redEnabled == false
-				&& light1_yellowEnabled == false && light1_greenEnabled == true) {
-
-				light1_greenCurrentRGB[0] = grayRGB[0];
-				light1_greenCurrentRGB[1] = grayRGB[1];
-				light1_greenCurrentRGB[2] = grayRGB[2];
-
-				light1_yellowCurrentRGB[0] = yellowRGB[0];
-				light1_yellowCurrentRGB[1] = yellowRGB[1];
-				light1_yellowCurrentRGB[2] = yellowRGB[2];
-
-				light1_yellowEnabled = true;
-				light1_greenEnabled = false;
-				light1_loopingDown = false;
-			}
-			else if (light1_redEnabled == false && light1_yellowEnabled == true) {
-				light1_yellowCurrentRGB[0] = grayRGB[0];
-				light1_yellowCurrentRGB[1] = grayRGB[1];
-				light1_yellowCurrentRGB[2] = grayRGB[2];
-
-				light1_redCurrentRGB[0] = redRGB[0];
-				light1_redCurrentRGB[1] = redRGB[1];
-				light1_redCurrentRGB[2] = redRGB[2];
-
-				light1_redEnabled = true;
-				light1_yellowEnabled = false;
-			}
-
-			return 0;
-
-		case TrafficLight_2:
-
-			if (light2_redEnabled == true && light2_yellowEnabled == false) {
-				light2_yellowCurrentRGB[0] = yellowRGB[0];
-				light2_yellowCurrentRGB[1] = yellowRGB[1];
-				light2_yellowCurrentRGB[2] = yellowRGB[2];
-
-				light2_yellowEnabled = true;
-				light2_loopingDown = true;
-
-			}
-
-			else if (light2_loopingDown == true && light2_yellowEnabled == true
-				&& light2_greenEnabled == false) {
-				light2_redCurrentRGB[0] = grayRGB[0];
-				light2_redCurrentRGB[1] = grayRGB[1];
-				light2_redCurrentRGB[2] = grayRGB[2];
-
-				light2_yellowCurrentRGB[0] = grayRGB[0];
-				light2_yellowCurrentRGB[1] = grayRGB[1];
-				light2_yellowCurrentRGB[2] = grayRGB[2];
-
-				light2_greenCurrentRGB[0] = greenRGB[0];
-				light2_greenCurrentRGB[1] = greenRGB[1];
-				light2_greenCurrentRGB[2] = greenRGB[2];
-				light2_redEnabled = false;
-				light2_yellowEnabled = false;
-				light2_greenEnabled = true;
-
-			}
-			else if (light2_redEnabled == false
-				&& light2_yellowEnabled == false && light2_greenEnabled == true) {
-				light2_greenCurrentRGB[0] = grayRGB[0];
-				light2_greenCurrentRGB[1] = grayRGB[1];
-				light2_greenCurrentRGB[2] = grayRGB[2];
-
-				light2_yellowCurrentRGB[0] = yellowRGB[0];
-				light2_yellowCurrentRGB[1] = yellowRGB[1];
-				light2_yellowCurrentRGB[2] = yellowRGB[2];
-
-				light2_yellowEnabled = true;
-				light2_greenEnabled = false;
-				light2_loopingDown = false;
-			}
-			else if (light2_redEnabled == false && light2_yellowEnabled == true) {
-				light2_yellowCurrentRGB[0] = grayRGB[0];
-				light2_yellowCurrentRGB[1] = grayRGB[1];
-				light2_yellowCurrentRGB[2] = grayRGB[2];
-
-				light2_redCurrentRGB[0] = redRGB[0];
-				light2_redCurrentRGB[1] = redRGB[1];
-				light2_redCurrentRGB[2] = redRGB[2];
-
-				light2_redEnabled = true;
-				light2_yellowEnabled = false;
+			for (int i = 0; i < 4; i++) {
+				if (lights[i].getRedEnabled() == true 
+					&& lights[i].getYellowEnabled() == false) {
+					lights[i].setYellow();
+					lights[i].setLoopingDown(true);
+				}
+				else if (lights[i].getLoopingDown() == true && lights[i].getYellowEnabled() == true
+					&& lights[i].getGreenEnabled() == false) {
+					lights[i].setGreen();
+				}
+				else if (lights[i].getRedEnabled() == false  && lights[i].getYellowEnabled() == false
+					&& lights[i].getGreenEnabled() == true) {
+					lights[i].setYellow();
+					lights[i].setLoopingDown(false);
+				}
+				else if (lights[i].getRedEnabled() == false
+					&& lights[i].getYellowEnabled() == true ) {
+					lights[i].setRed();	
+				}
 			}
 
 			return 0;
@@ -552,10 +438,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			for (int i = 0; i < numberOfCarsHorizontal; i++) {
 
 				if (carsHorizontal[i].getX() == 456 - (queueHorizontal.size() * 48)
-					&& (light2_redEnabled || light2_yellowEnabled)) {
+					&& (lights[1].getRedEnabled() == true || lights[1].getYellowEnabled())) {
 						
 						queueHorizontal.push(carsHorizontal[i]);
-						
 				}
 				else {
 					if (!queueHorizontal.empty() && carsHorizontal[i].getX() > 550) {
@@ -564,11 +449,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					carsHorizontal[i].setX(carsHorizontal[i].getX() + 6);
 				}
 			}
+
+			for (int i = 0; i < numberOfCarsHorizontalEast; i++) {
+
+				if (carsHorizontalEast[i].getX() == 606 + (queueHorizontalEast.size() * 48)
+					&& (lights[1].getRedEnabled() == true || lights[1].getYellowEnabled())) {
+
+					queueHorizontalEast.push(carsHorizontalEast[i]);
+				}
+				else {
+					if (!queueHorizontalEast.empty()) {
+						queueHorizontalEast.pop();
+					}
+					carsHorizontalEast[i].setX(carsHorizontalEast[i].getX() - 6);
+				}
+			}
 		
 			for (int i = 0; i < numberOfCarsVertical; i++) {
 
 				if (carsVertical[i].getY() == 252 - (queueVertical.size() * 48)
-					&& (light1_redEnabled == true || light1_yellowEnabled == true)) {
+					&& (lights[0].getRedEnabled() == true || lights[0].getYellowEnabled() == true)) {
 
 					queueVertical.push(carsVertical[i]);
 				}
@@ -577,6 +477,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						queueVertical.pop();
 					}
 					carsVertical[i].setY(carsVertical[i].getY() + 6);
+				}
+			}
+
+
+			for (int i = 0; i < numberOfCarsVerticalSouth; i++) {
+
+				if (carsVerticalSouth[i].getY() ==  394 + (queueVerticalSouth.size() * 48)
+					&& (lights[3].getRedEnabled() == true || lights[3].getYellowEnabled() == true)) {
+
+					queueVerticalSouth.push(carsVerticalSouth[i]);
+				}
+				else {
+					if (!queueVerticalSouth.empty() && carsVerticalSouth[i].getY() < 380) {
+						queueVerticalSouth.pop();
+					}
+					carsVerticalSouth[i].setY(carsVerticalSouth[i].getY() - 6);
 				}
 			}
 
@@ -591,16 +507,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case SpawnCars:
 
 			if (wait > 120) {
+
 				int p_scaledH = (rand() % 101) + spawnHorizontalCarProbability;
 				if (p_scaledH >= 100 && queueHorizontal.size() < 8) {
 					carsHorizontal[numberOfCarsHorizontal] = Car(0, 345, (rand() + 256), (rand() + 256), (rand() + 256));
 					numberOfCarsHorizontal++;
 				}
 
+				int p_scaledHEast = (rand() % 101) + spawnHorizontalCarProbability;
+				if (p_scaledHEast >= 100 && queueHorizontalEast.size() < 11) {
+					carsHorizontalEast[numberOfCarsHorizontalEast] = Car(1302, 295, (rand() + 256), (rand() + 256), (rand() + 256));
+					numberOfCarsHorizontalEast++;
+				}
+
 				int p_scaledV = (rand() % 101) + spawnVerticalCarProbability;
 				if (p_scaledV >= 100 && queueVertical.size() < 5) {
 					carsVertical[numberOfCarsVertical] = Car(507, 0, (rand() + 256), (rand() + 256), (rand() + 256));
 					numberOfCarsVertical++;
+				}
+
+				int p_scaledVSouth = (rand() % 101) + spawnVerticalCarProbability;
+				if (p_scaledVSouth >= 100 && queueVerticalSouth.size() < 4) {
+					carsVerticalSouth[numberOfCarsVerticalSouth] = Car(555, 700, (rand() + 256), (rand() + 256), (rand() + 256));
+					numberOfCarsVerticalSouth++;
 				}
 			}
 

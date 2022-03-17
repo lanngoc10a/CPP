@@ -1,87 +1,109 @@
-#include <iostream>
-#include "framework.h"
 #include "TrafficLight.h"
-using namespace std;
 
+TrafficLight::TrafficLight() {
 
-void TrafficLight::makeLight(HDC hDC, HBRUSH rectBrush, HBRUSH cirBrush, int x, int y
-	, int rectRGB[], int redCurrentRGB[], int yellowCurrentRGB[], int greenCurrentRGB[]) {
-	// Create the rectangle
-	rectBrush = CreateSolidBrush(RGB(rectRGB[0], rectRGB[1], rectRGB[2]));
-	SelectObject(hDC, rectBrush);
-	Rectangle(hDC, x + 25, y - 170, x - 40, y + 25);
+}
+TrafficLight::TrafficLight(int X, int Y,int light_enabled) {
+	x = X;
+	y = Y;
 
-	// Create red circle
-	cirBrush = CreateSolidBrush(RGB(redCurrentRGB[0], redCurrentRGB[1], redCurrentRGB[2]));
-	SelectObject(hDC, cirBrush);
-	Ellipse(hDC, x + 18, y - 160, x - 32, y - 110);
-
-	// Create yellow circle
-	cirBrush = CreateSolidBrush(RGB(yellowCurrentRGB[0], yellowCurrentRGB[1], yellowCurrentRGB[2]));
-	SelectObject(hDC, cirBrush);
-	Ellipse(hDC, x + 18, y - 100, x - 32, y - 50);
-
-
-	// Create green circle
-	cirBrush = CreateSolidBrush(RGB(greenCurrentRGB[0], greenCurrentRGB[1], greenCurrentRGB[2]));
-	SelectObject(hDC, cirBrush);
-	Ellipse(hDC, x + 18, y - 40, x - 32, y + 10);
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*HDC hDC;
-
-	int redRGB[3] = { 179,0,6 };
-
-	// Rectangle
-	int rectRGB[3] = { 0,0,0 };
-	int rectX = 232;
-	int rectY = 337;
-
-
-
-	const int penSize = 5;
-
-	TrafficLight(HDC newhdc) {
-		hDC = newhdc;
-
+	if (light_enabled == 0) {
+		setRed();
+		loopingDown = true;
 	}
-
-	void createTrafficLight() {
-		HPEN hRectPen = CreatePen(PS_SOLID, penSize, RGB(rectRGB[0], rectRGB[1], rectRGB[2]));
-		SelectObject(hDC, hRectPen);
-
-		Rectangle(hDC, rectX + 25, rectY - 250, rectX - 40, rectY + 25);
+	else if (light_enabled == 1) {
+		setYellow();
 	}
+	else if (light_enabled == 2) {
+		setGreen();
+	}
+	else {
+		setRed();
+	}
+}
 
-	/*
-	hDC = BeginPaint(hwnd, &Ps);
-	hRectPen = CreatePen(PS_SOLID, penSize, RGB(rectRed, rectGreen, rectBlue));
-	SelectObject(hDC, hRectPen);
+int TrafficLight::getX() {
+	return x;
+}
 
-	rectBrush = CreateSolidBrush(RGB(rectBrushRed, rectBrushGreen, rectBrushBlue));
-	SelectObject(hDC, rectBrush);
-	Rectangle(hDC, rectX + 25, rectY - 170, rectX - 40, rectY + 25);*/
+int TrafficLight::getY() {
+	return y;
+}
+
+int *TrafficLight::getGreen() {
+	return green;
+}
+
+int* TrafficLight::getYellow() {
+	return yellow;
+}
+
+int* TrafficLight::getRed() {
+	return red;
+}
+
+void TrafficLight::setGreen() {
+	green[0] = 127;
+	green[1] = 204;
+	green[2] = 40;
+
+	yellow[0] = 128;
+	yellow[1] = 128;
+	yellow[2] = 128;
+
+	red[0] = 128;
+	red[1] = 128;
+	red[2] = 128;
+
+	redEnabled = false;
+	yellowEnabled = false;
+	greenEnabled = true;
+
+}
+
+void TrafficLight::setYellow() {
+	yellow[0] = 251;
+	yellow[1] = 208;
+	yellow[2] = 75;
+
+	green[0] = 128;
+	green[1] = 128;
+	green[2] = 128;
+
+	yellowEnabled = true;
+}
+void TrafficLight::setRed() {
+	red[0] = 179;
+	red[1] = 0;
+	red[2] = 6;
+
+	green[0] = 128;
+	green[1] = 128;
+	green[2] = 128;
+
+	yellow[0] = 128;
+	yellow[1] = 128;
+	yellow[2] = 128;
+
+	greenEnabled = false;
+	yellowEnabled = false;
+	redEnabled = true;
+	
+}
+
+void TrafficLight::setLoopingDown(bool loop) {
+	loopingDown = loop;
+}
+
+bool TrafficLight::getLoopingDown() {
+	return loopingDown;
+}
+bool TrafficLight::getGreenEnabled() {
+	return greenEnabled;
+}
+bool TrafficLight::getYellowEnabled() {
+	return yellowEnabled;
+}
+bool TrafficLight::getRedEnabled() {
+	return redEnabled;
+}

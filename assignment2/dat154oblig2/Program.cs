@@ -25,10 +25,15 @@ namespace WindowsFormsApp1
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
+            List<Moon> mercuryMoons = new List<Moon>
+            {
+                  new Moon("asdf"),
+            };
+
             List<SpaceObject> solarSystem = new List<SpaceObject>
             {
-            new Star("Sun", 0.0, 0.0, 696340.0, 24.47, "Orange"),
-            new Planet("Mercury", 57909227, 88, 2439, 59, "Dark Gray"),
+                new Star("Sun", 0.0, 0.0, 696340.0, 24.47, "Orange"),
+                new Planet("Mercury", 57909227, 88, 2439, 59, "Dark Gray"),
             };
 
             

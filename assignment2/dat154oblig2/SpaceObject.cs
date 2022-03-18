@@ -81,8 +81,12 @@ namespace SpaceSim
 
         // Fix constructor to pass in moons
         public Planet(String name, double orbitalRadius, double orbitalPeriod
-            , double objectRadius, double rotationalPeriod, string objectColor)
-            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
+            , double objectRadius, double rotationalPeriod, string objectColor, List<Moon> moons)
+            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) 
+        {
+            this.moons = moons;
+        }
+ 
         public override void Draw()
         {
             Console.Write("Planet: ");
@@ -92,6 +96,8 @@ namespace SpaceSim
 
     public class Moon : SpaceObject
     {
+        string planet;
+
         public Moon(String name) : base(name) { }
 
         public Moon(String name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
@@ -140,6 +146,9 @@ namespace SpaceSim
     public class DwarfPlanet : SpaceObject
     {
         public DwarfPlanet(String name) : base(name) { }
+
+        public DwarfPlanet(String name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+           : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override void Draw()
         {

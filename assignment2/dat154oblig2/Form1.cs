@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SpaceObject sun = new Star("Sun", 0.0, 0.0, 696340.0, 24.47, "Orange");
+            SpaceObject sun = new Star("Sun", 0.0, 0.0, 696340.0, 24.47, "Red");
             
             System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
             System.Drawing.Graphics formGraphics;
@@ -35,7 +35,18 @@ namespace WindowsFormsApp1
             formGraphics.FillEllipse(myBrush, new Rectangle(0, 0, 100, 100));
             myBrush.Dispose();
             formGraphics.Dispose();
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SpaceObject moon = new Moon("Moon", 20.4, 0.4, 600000.0, 25.47, "DarkGray");
+            
+            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkGray);
+            System.Drawing.Graphics formGraphics;
+            formGraphics = this.CreateGraphics();
+            formGraphics.FillEllipse(myBrush, new Rectangle(155, 115, 50, 50));
+            myBrush.Dispose();
+            formGraphics.Dispose();
         }
     }                                                                                                               
 }

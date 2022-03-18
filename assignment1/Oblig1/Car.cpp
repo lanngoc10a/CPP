@@ -9,6 +9,14 @@ Car::Car(int X, int Y) {
 	y = Y;
 }
 
+Car::Car(int X, int Y, int r, int g, int b) {
+	x = X;
+	y = Y;
+	rgb[0] = r;
+	rgb[1] = g;
+	rgb[2] = b;
+ }
+
 int Car::getX() {
 	return x;
 }
@@ -23,4 +31,16 @@ void Car::setX(int X) {
 
 void Car::setY(int Y) {
 	y = Y;
+}
+
+int Car::getR() {
+	return rgb[0];
+}
+
+int Car::getG() {
+	return rgb[1];
+}
+
+int Car::getB() {
+	return rgb[2];
 }

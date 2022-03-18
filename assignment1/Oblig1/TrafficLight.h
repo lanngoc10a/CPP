@@ -1,17 +1,39 @@
 #pragma once
-#include <iostream>
-
-
-using namespace std;
-
 class TrafficLight
 {
+	int x;
+	int y;
+	int green[3] = { 0,0,0 };
+	bool greenEnabled = false;
+	
+	int yellow[3] = { 0,0,0 };
+	bool yellowEnabled = false;
+
+	int red[3] = { 0,0,0 };
+	bool redEnabled = false;
+
+	bool loopingDown;
 
 public:
-
 	TrafficLight();
-	void makeLight(HDC hDC, HBRUSH rectBrush, HBRUSH cirBrush, int x, int y
-		, int rectRGB[], int redCurrentRGB[], int yellowCurrentRGB[], int greenCurrentRGB[]);
+	TrafficLight(int x, int y, int light_enabled);
+
+	int getX();
+	int getY();
+
+	int *getGreen();
+	int *getYellow();
+	int *getRed();
+
+	void setGreen();
+	void setYellow();
+	void setRed();
+	void setLoopingDown(bool loop);
+	bool getLoopingDown();
+	bool getGreenEnabled();
+	bool getYellowEnabled();
+	bool getRedEnabled();
 
 };
+
 

@@ -9,49 +9,38 @@ namespace SpaceSim
 {
     public class SpaceObject
     {
-        private string name;
-        private double orbitalRadius;
-        private double orbitalPeriod;
-        private double objectRadius;
-        private double rotationalPeriod;
-        private string objectColor;
-
-        private double x = 0;
-        private double y = 0;
-
-        private double scalingToSun;
-
-        public SpaceObject(String name)
+        public SpaceObject(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public SpaceObject(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor) : this(name)
         {
-            this.orbitalRadius = orbitalRadius;
-            this.x = orbitalRadius;
-            this.orbitalPeriod = orbitalPeriod;
-            this.objectRadius = objectRadius;
-            this.rotationalPeriod = rotationalPeriod;
-            this.objectColor = objectColor;
-            this.scalingToSun = 696340 / objectRadius;
+            this.OrbitalRadius = orbitalRadius;
+            this.X = orbitalRadius;
+            this.OrbitalPeriod = orbitalPeriod;
+            this.ObjectRadius = objectRadius;
+            this.RotationalPeriod = rotationalPeriod;
+            this.ObjectColor = objectColor;
         }
 
-        public string Name { get => name; set => name = value; }
-        public double OrbitalRadius { get => orbitalRadius; set => orbitalRadius = value; }
-        public double ObjectRadius { get => objectRadius; set => objectRadius = value; }
-        public double RotationalPeriod { get => rotationalPeriod; set => rotationalPeriod = value; }
-        public string ObjectColor { get => objectColor; set => objectColor = value; }
-        public double OrbitalPeriod { get => orbitalPeriod; set => orbitalPeriod = value; }
-        public double X { get => x; set => x = value; }
-        public double Y { get => y; set => y = value; }
-        public double ScalingToSun { get => scalingToSun; set => scalingToSun = value; }
+        public string Name { get; set; }
+        public double OrbitalRadius { get; set; }
+        public double ObjectRadius { get; set; }
+        public double RotationalPeriod { get; set; }
+        public string ObjectColor { get; set; }
+        public double OrbitalPeriod { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
-        public virtual void calculatePosition(float time)
+        public void CalculatePosition(float time)
         {
-            this.x = orbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (orbitalPeriod));
-            this.y = orbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (orbitalPeriod));
+            this.X = CalculatePositionX(time);
+            this.Y = CalculatePositionY(time);
         }
+
+        public virtual double CalculatePositionX(float time) => OrbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
+        public virtual double CalculatePositionY(float time) => OrbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
 
         public virtual PointF calculatePositionPointF(float time)
         {
@@ -63,20 +52,20 @@ namespace SpaceSim
 
         public virtual void Draw()
         {
-            Console.WriteLine(name);
-            Console.WriteLine("Orbital Radius:" + orbitalRadius);
-            Console.WriteLine("Object Radius: " + objectRadius);
-            Console.WriteLine("Rotational Period: " + rotationalPeriod);
-            Console.WriteLine("Color: " + objectColor);
-            Console.WriteLine("X position: " + x);
-            Console.WriteLine("Y position: " + y);
+            Console.WriteLine(Name);
+            Console.WriteLine("Orbital Radius:" + OrbitalRadius);
+            Console.WriteLine("Object Radius: " + ObjectRadius);
+            Console.WriteLine("Rotational Period: " + RotationalPeriod);
+            Console.WriteLine("Color: " + ObjectColor);
+            Console.WriteLine("X position: " + X);
+            Console.WriteLine("Y position: " + Y);
         }
     }
 
     public class Star : SpaceObject
     {
-        public Star(String name) : base(name) { }
-        public Star(String name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public Star(string name) : base(name) { }
+        public Star(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override void Draw()
@@ -87,16 +76,16 @@ namespace SpaceSim
     }
     public class Planet : SpaceObject
     {
+        List<Moon> Moons { get; set; }
 
-        List<Moon> moons;
-        public Planet(String name) : base(name) { }
+        public Planet(string name) : base(name) { }
 
         // Fix constructor to pass in moons
-        public Planet(String name, double orbitalRadius, double orbitalPeriod
+        public Planet(string name, double orbitalRadius, double orbitalPeriod
             , double objectRadius, double rotationalPeriod, string objectColor, List<Moon> moons)
-            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) 
+            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor)
         {
-            this.moons = moons;
+            this.Moons = moons;
         }
 
         public List<Moon> getMoons()
@@ -113,12 +102,16 @@ namespace SpaceSim
 
     public class Moon : SpaceObject
     {
-        string planet;
+        Planet Planet { get; set; }
 
-        public Moon(String name) : base(name) { }
+        public Moon(string name) : base(name) { }
 
-        public Moon(String name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public Moon(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
+
+        public override double CalculatePositionX(float time) => base.CalculatePositionX(time) + Planet.X;
+        public override double CalculatePositionY(float time) => base.CalculatePositionX(time) + Planet.Y;
+
 
         public override void Draw()
         {
@@ -129,7 +122,7 @@ namespace SpaceSim
 
     public class Comet : SpaceObject
     {
-        public Comet(String name) : base(name) { }
+        public Comet(string name) : base(name) { }
 
         public override void Draw()
         {
@@ -140,7 +133,7 @@ namespace SpaceSim
 
     public class Asteroid : SpaceObject
     {
-        public Asteroid(String name) : base(name) { }
+        public Asteroid(string name) : base(name) { }
 
         public override void Draw()
         {
@@ -151,7 +144,7 @@ namespace SpaceSim
 
     public class AsteroidBelt : SpaceObject
     {
-        public AsteroidBelt(String name) : base(name) { }
+        public AsteroidBelt(string name) : base(name) { }
 
         public override void Draw()
         {
@@ -162,9 +155,9 @@ namespace SpaceSim
 
     public class DwarfPlanet : SpaceObject
     {
-        public DwarfPlanet(String name) : base(name) { }
+        public DwarfPlanet(string name) : base(name) { }
 
-        public DwarfPlanet(String name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public DwarfPlanet(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override void Draw()

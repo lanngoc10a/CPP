@@ -22,6 +22,7 @@ namespace SpaceSim
             this.ObjectRadius = objectRadius;
             this.RotationalPeriod = rotationalPeriod;
             this.ObjectColor = objectColor;
+            this.ScalingToSun = 696340 / objectRadius;
         }
 
         public string Name { get; set; }
@@ -29,6 +30,7 @@ namespace SpaceSim
         public double ObjectRadius { get; set; }
         public double RotationalPeriod { get; set; }
         public string ObjectColor { get; set; }
+        public double ScalingToSun { get; }
         public double OrbitalPeriod { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
@@ -44,10 +46,10 @@ namespace SpaceSim
 
         public virtual PointF calculatePositionPointF(float time)
         {
-            x = (float)(orbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (orbitalPeriod)));
-            y = (float)(orbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (orbitalPeriod)));
+            X = (float)(OrbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod)));
+            Y = (float)(OrbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod)));
 
-            return new PointF((float)x, (float)y);
+            return new PointF((float)X, (float)Y);
         }
 
         public virtual void Draw()
@@ -88,10 +90,6 @@ namespace SpaceSim
             this.Moons = moons;
         }
 
-        public List<Moon> getMoons()
-        {
-            return moons;
-        }
  
         public override void Draw()
         {

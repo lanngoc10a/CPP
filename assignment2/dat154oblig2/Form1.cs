@@ -285,7 +285,7 @@ namespace WindowsFormsApp1
                         if (obj.Name == selectedPlanet)
                         {
 
-                        List<Moon> moons = obj.getMoons();
+                        /*
                  
 
                         foreach (Moon moon in moons)
@@ -305,7 +305,7 @@ namespace WindowsFormsApp1
                             }
                             graphics.FillEllipse(planetBrush, objF);
                         }
-
+                        */
                         fg.DrawImage(btm, img);
 
                         Thread.Sleep(10);

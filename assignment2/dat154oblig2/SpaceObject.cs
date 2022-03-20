@@ -16,7 +16,7 @@ namespace SpaceSim
             this.Name = name;
         }
 
-        public SpaceObject(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor) : this(name)
+        public SpaceObject(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor) : this(name)
         {
             this.OrbitalRadius = orbitalRadius;
             this.X = orbitalRadius;
@@ -31,7 +31,7 @@ namespace SpaceSim
         public double OrbitalRadius { get; set; }
         public double ObjectRadius { get; set; }
         public double RotationalPeriod { get; set; }
-        public string ObjectColor { get; set; }
+        public Color ObjectColor { get; set; }
         public double ScalingToSun { get; }
         public double OrbitalPeriod { get; set; }
         public double X { get; set; }
@@ -70,7 +70,7 @@ namespace SpaceSim
     public class Star : SpaceObject
     {
         public Star(string name) : base(name) { }
-        public Star(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public Star(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override void Draw()
@@ -87,7 +87,7 @@ namespace SpaceSim
 
         // Fix constructor to pass in moons
         public Planet(string name, double orbitalRadius, double orbitalPeriod
-            , double objectRadius, double rotationalPeriod, string objectColor, List<Moon> moons)
+            , double objectRadius, double rotationalPeriod, Color objectColor, List<Moon> moons)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor)
         {
             this.Moons = moons;
@@ -106,7 +106,7 @@ namespace SpaceSim
 
         public Moon(string name) : base(name) { }
 
-        public Moon(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public Moon(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override double CalculatePositionX(float time) => base.CalculatePositionX(time) + Planet.X;
@@ -157,7 +157,7 @@ namespace SpaceSim
     {
         public DwarfPlanet(string name) : base(name) { }
 
-        public DwarfPlanet(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
+        public DwarfPlanet(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor)
            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
 
         public override void Draw()

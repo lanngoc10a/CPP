@@ -50,36 +50,34 @@ namespace WindowsFormsApp1
 
         List<Moon> mercuryMoons = new List<Moon>
             {
-                  new Moon("Moon1", 50, 22.1, 45.2, 30.1, "Dark Gray"),
-                  new Moon("Moon2", 100, 25.1, 48.2, 60.1, "Dark Gray"),
-                  new Moon("Moon3", 150, 28.1, 52.2, 90.1, "Dark Gray"),
-                  new Moon("Moon4", 200, 30.1, 54.2, 120.1, "Dark Gray"),
+                  new Moon("Moon1", 50, 22.1, 45.2, 30.1, Color.White),
+                  new Moon("Moon2", 100, 25.1, 48.2, 60.1, Color.White),
+                  
             };
 
-        
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             btm = new Bitmap(1920, 1080);
             graphics = Graphics.FromImage(btm);
             fg = CreateGraphics();
             thread = new Thread(Draw);
             thread.IsBackground = true;
             thread.Start();
-            
+
         }
-        
+
 
         public void Draw()
         {
-            
 
             while (drawing)
             {
                 /*
                  *  SpaceObject
                 */
-            
+
                 Brush planetBrush = new SolidBrush(Color.White);
                 Brush pBrush;
 
@@ -141,7 +139,7 @@ namespace WindowsFormsApp1
                         RectangleF objF = new RectangleF(0, 0, ((float)(sun.Width / (double)obj.ScalingToSun) * sunDownScaling)
                             , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
 
-                        pBrush = new SolidBrush(Color.White);
+                        pBrush = new SolidBrush(obj.ObjectColor);
                         PointF objPoint = obj.calculatePositionPointF(numberOfDays);
                         objF.X = (objPoint.X / scaling) + sun.X - (objF.Height / 2) + 10;
                         objF.Y = (objPoint.Y / scaling) + sun.Y - (objF.Width / 2) + 10;
@@ -150,7 +148,7 @@ namespace WindowsFormsApp1
                         {
                             graphics.DrawString(obj.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
                         }
-                        graphics.FillEllipse(planetBrush, objF);
+                        graphics.FillEllipse(pBrush, objF);
                     }
 
                     fg.DrawImage(btm, img);
@@ -181,6 +179,7 @@ namespace WindowsFormsApp1
                     graphics.FillEllipse(sunBrush, planet);
                     graphics.DrawString(planetObject.Name, planetFont, planettextBrush, planet.X + 25, planet.Y + 25, planetFormat);
 
+
                     foreach (Moon moon in mercuryMoons)
                     {
 
@@ -194,12 +193,17 @@ namespace WindowsFormsApp1
 
                         if (showNames == true)
                         {
-                           
                             graphics.DrawString(moon.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
                         }
                         graphics.FillEllipse(planetBrush, objF);
 
                     }
+
+                    graphics.DrawString("Planet: " + planetObject.Name, planetFont, planettextBrush, 100, 300, planetFormat);
+                    graphics.DrawString("Planet radius: " + planetObject.ObjectRadius + " km", planetFont, planettextBrush, 100, 320, planetFormat);
+                    graphics.DrawString("Distanse fra sola: " + planetObject.OrbitalRadius + " km", planetFont, planettextBrush, 100, 340, planetFormat);
+
+
 
                     fg.DrawImage(btm, img);
 
@@ -262,23 +266,23 @@ namespace WindowsFormsApp1
         private List<SpaceObject> getSolarSystem()
         {
             List<Moon> mercuryMoons = new List<Moon> {};
-
+            };
             List<Moon> venusMoons = new List<Moon> {};
+            };
 
             List<Moon> earthMoons = new List<Moon>
             {
-                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, Color.White),
             };
 
             List<Moon> marsMoons = new List<Moon>
-            {
                   new Moon("Phobos", 9, 0.32, 41.2, 24.1, "Dark Gray"),
                   new Moon("Deimos", 23, 46023, 41.2, 24.1, "Dark Gray"),
 
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
             List<Moon> jupiterMoons = new List<Moon>
-            {
                 new Moon("Metis", 128, 0.29, 41.2, 24.1, "Dark Gray"),
                 new Moon("Adrastea", 129, 0.3, 41.2, 24.1, "Dark Gray"),
                 new Moon("Amalthea", 181, 0.35, 41.2, 24.1, "Dark Gray"),
@@ -297,9 +301,9 @@ namespace WindowsFormsApp1
                 new Moon("Sinope", 23700, 758, 41.2, 24.1, "Dark Gray"),  //minus rotasjon
 
 
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
-            List<Moon> saturnMoons = new List<Moon>
             {
                   new Moon("Pan", 134, 0.58, 41.2, 24.1, "Dark Gray"),
                   new Moon("Atlas", 138, 0.6, 41.2, 24.1, "Dark Gray"),
@@ -320,10 +324,10 @@ namespace WindowsFormsApp1
                   new Moon("Iapetus", 3561, 79.33, 41.2, 24.1, "Dark Gray"),
                   new Moon("Phoebe", 12952, 550.48, 41.2, 24.1, "Dark Gray"),   //minus rotasjon
 
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
             List<Moon> uranusMoons = new List<Moon>
-            {
                   new Moon("Cordelia", 50, 0.34, 41.2, 24.1, "Dark Gray"),
                   new Moon("Ophelia", 54, 0.38, 41.2, 24.1, "Dark Gray"),
                   new Moon("Bianca", 59, 0.43, 41.2, 24.1, "Dark Gray"),
@@ -345,10 +349,10 @@ namespace WindowsFormsApp1
                   new Moon("Porspero", 16568, 2019, 41.2, 24.1, "Dark Gray"),  //minus rotasjon
                   new Moon("Setebos", 17681, 2239, 41.2, 24.1, "Dark Gray"),  //minus rotasjon
 
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
             List<Moon> neptuneMoons = new List<Moon>
-            {
                   new Moon("Naiad", 48, 0.29, 41.2, 24.1, "Dark Gray"),
                   new Moon("Thalassa", 50, 0.31, 41.2, 24.1, "Dark Gray"),
                   new Moon("Despina", 53, 0.33, 41.2, 24.1, "Dark Gray"),
@@ -357,19 +361,20 @@ namespace WindowsFormsApp1
                   new Moon("Proteus", 118, 44166, 41.2, 24.1, "Dark Gray"),
                   new Moon("Trition", 355, 5.88, 41.2, 24.1, "Dark Gray"),  //minus rotasjon
                   new Moon("Nereid", 5513, 360, 41.2, 24.1, "Dark Gray"),
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
             List<SpaceObject> solarSystem = new List<SpaceObject>
             {
-                new Star("Sun", 0.0, 0.0, 696340.0, 24.47, "Orange"),
-                new Planet("Mercury", 57909227, 88, 2439, 59, "Dark Gray", mercuryMoons),
-                new Planet("Venus", 108200000, 225, 6052, 243, "Yellow", venusMoons),
-                new Planet("Earth", 147100000, 365, 6371, 1, "Blue", earthMoons),
-                new Planet("Mars", 227900000, 687, 3390, 1, "Red", marsMoons),
-                new Planet("Jupiter", 778000000, 4333, 69911, 0.4, "White", jupiterMoons),
-                new Planet("Saturn", 1433449370, 10759, 58232, 0.4, "Pale Yellow", saturnMoons),
-                new Planet("Uranus", 2870972200, 30769, 25362, 0.7, "Blue-Green", uranusMoons),
-                new Planet("Neptune", 4500000000, 60225, 24622, 0.7, "Blue", neptuneMoons),
+                new Star("Sun", 0.0, 0.0, 696340.0, 24.47, Color.Orange),
+                new Planet("Mercury", 57909227, 88, 2439, 59, Color.DarkGray, mercuryMoons),
+                new Planet("Venus", 108200000, 225, 6052, 243, Color.Yellow, venusMoons),
+                new Planet("Earth", 147100000, 365, 6371, 1, Color.Blue, earthMoons),
+                new Planet("Mars", 227900000, 687, 3390, 1, Color.Red, marsMoons),
+                new Planet("Jupiter", 778000000, 4333, 69911, 0.4, Color.White, jupiterMoons),
+                new Planet("Saturn", 1433449370, 10759, 58232, 0.4, Color.PaleGoldenrod, saturnMoons),
+                new Planet("Uranus", 2870972200, 30769, 25362, 0.7, Color.Cyan, uranusMoons),
+                new Planet("Neptune", 4500000000, 60225, 24622, 0.7, Color.Blue, neptuneMoons),
             };
 
             return solarSystem;

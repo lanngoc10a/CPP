@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,11 +33,14 @@ namespace SpaceSim
         public double X { get; set; }
         public double Y { get; set; }
 
-        public virtual void calculatePosition(float time)
+        public void CalculatePosition(float time)
         {
-            this.X = OrbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
-            this.Y = OrbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
+            this.X = CalculatePositionX(time);
+            this.Y = CalculatePositionY(time);
         }
+
+        public virtual double CalculatePositionX(float time) => OrbitalRadius * Math.Cos(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
+        public virtual double CalculatePositionY(float time) => OrbitalRadius * Math.Sin(((2 * Math.PI) * (time - 0)) / (OrbitalPeriod));
 
         public virtual void Draw()
         {
@@ -64,18 +68,18 @@ namespace SpaceSim
     }
     public class Planet : SpaceObject
     {
+        List<Moon> Moons { get; set; }
 
-        List<Moon> moons;
         public Planet(string name) : base(name) { }
 
         // Fix constructor to pass in moons
         public Planet(string name, double orbitalRadius, double orbitalPeriod
             , double objectRadius, double rotationalPeriod, string objectColor, List<Moon> moons)
-            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) 
+            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor)
         {
-            this.moons = moons;
+            this.Moons = moons;
         }
- 
+
         public override void Draw()
         {
             Console.Write("Planet: ");
@@ -85,12 +89,16 @@ namespace SpaceSim
 
     public class Moon : SpaceObject
     {
-        string planet;
+        Planet Planet { get; set; }
 
         public Moon(string name) : base(name) { }
 
         public Moon(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, string objectColor)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
+
+        public override double CalculatePositionX(float time) => base.CalculatePositionX(time) + Planet.X;
+        public override double CalculatePositionY(float time) => base.CalculatePositionX(time) + Planet.Y;
+
 
         public override void Draw()
         {

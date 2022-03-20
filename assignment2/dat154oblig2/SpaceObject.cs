@@ -9,6 +9,8 @@ namespace SpaceSim
 {
     public class SpaceObject
     {
+        List<Moon> moons;
+
         public SpaceObject(string name)
         {
             this.Name = name;
@@ -34,6 +36,7 @@ namespace SpaceSim
         public double OrbitalPeriod { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
+        public List<Moon> Moons { get => moons; set => moons = value; }
 
         public void CalculatePosition(float time)
         {
@@ -90,7 +93,6 @@ namespace SpaceSim
             this.Moons = moons;
         }
 
- 
         public override void Draw()
         {
             Console.Write("Planet: ");

@@ -18,6 +18,7 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
+            Load += new EventHandler(Form1_Load);
         }
 
         Thread thread;
@@ -27,7 +28,7 @@ namespace WindowsFormsApp1
         Bitmap btm;
 
         bool drawing = true;
-
+        bool drawingSolarSystem = true;
         bool drawingPlanetWithMoons = false;
 
         bool showNames = true;
@@ -36,125 +37,235 @@ namespace WindowsFormsApp1
 
         int numberOfDays = 0;
 
+        int scaling = 8000000;
+
         String selectedPlanet = null;
 
+        SpaceObject planetObject = null;
 
-        /*
+        List<SpaceObject> solarSystem;
+
+        List<Moon> moons = null;
+
+
+        List<Moon> mercuryMoons = new List<Moon>
+            {
+                  new Moon("Moon1", 50, 22.1, 45.2, 30.1, "Dark Gray"),
+                  new Moon("Moon2", 100, 25.1, 48.2, 60.1, "Dark Gray"),
+                  new Moon("Moon3", 150, 28.1, 52.2, 90.1, "Dark Gray"),
+                  new Moon("Moon4", 200, 30.1, 54.2, 120.1, "Dark Gray"),
+            };
+
+        
         private void Form1_Load(object sender, EventArgs e)
         {
-            ;
-            btm = new Bitmap(1920, 1080);
-            graphics = Graphics.FromImage(btm);
-            foreGround = CreateGraphics();
-            thread = new Thread(Draw);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        */
-
-
-        public void Draw()
-        {
-            /*
-             *  SpaceObject
-             */
-
-            Brush planetBrush = new SolidBrush(Color.White);
-            Brush pBrush;
-
-            // Text
-            Font drawFont = new Font("Arial", 16);
-           
-            SolidBrush drawBrush = new SolidBrush(Color.White);
-            float x = 150.0F;
-            float y = 50.0F;
-            StringFormat drawFormat = new StringFormat();
-
-            Font planetFont = new Font("Arial", 8);
-            SolidBrush planettextBrush = new SolidBrush(Color.White);
-
-            StringFormat planetFormat = new StringFormat();
-
-            /*
-             *  Sun
-             */
-            Brush sunBrush = new SolidBrush(Color.Red);
-            RectangleF sun = new RectangleF(600, 300, 20, 20);
-
-            List<SpaceObject> solarSystem = getSolarSystem();
-
             
-            PointF img = new PointF(20, 20);
-
-            fg.Clear(Color.Black);
-
-            while (drawing)
-            {
-                
-                graphics.Clear(Color.Black);
-
-                /*
-                 *  Number of days text
-                 */
-
-                graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
-                
-                /*
-                    Draw sun 
-                */
-
-                graphics.FillEllipse(sunBrush, sun);
-
-
-                foreach (SpaceObject obj in solarSystem)
-                {
-
-                    /*
-                     * RectangleF objF creates the planet at position 0,0 ( position is updated later)
-                     * Width and height is scaled according to the sun
-                     * 
-                     * int sunDownScaling is used to lower the scale of the sun for visibility purposes
-                     * At 20 the sun is scaled down 20 times
-                     */
-
-                    int sunDownScaling = 20;
-                    RectangleF objF = new RectangleF(0, 0, ((float)(sun.Width / (double)obj.ScalingToSun) * sunDownScaling)
-                        , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
-
-                    pBrush = new SolidBrush(Color.White);
-                    PointF objPoint = obj.calculatePositionPointF(numberOfDays);
-                    objF.X = (objPoint.X / 8000000) + sun.X - (objF.Height / 2) + 10;
-                    objF.Y = (objPoint.Y / 8000000) + sun.Y - (objF.Width / 2) + 10;
-
-                    if (showNames == true)
-                    {
-                        graphics.DrawString(obj.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
-                    }
-                    graphics.FillEllipse(planetBrush, objF);
-                }
-
-                fg.DrawImage(btm, img);
-                
-                Thread.Sleep(10);
-                numberOfDays += speed;
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
             btm = new Bitmap(1920, 1080);
             graphics = Graphics.FromImage(btm);
             fg = CreateGraphics();
-
             thread = new Thread(Draw);
             thread.IsBackground = true;
             thread.Start();
+            
+        }
+        
+
+        public void Draw()
+        {
+            
+
+            while (drawing)
+            {
+                /*
+                 *  SpaceObject
+                */
+            
+                Brush planetBrush = new SolidBrush(Color.White);
+                Brush pBrush;
+
+                // Text
+                Font drawFont = new Font("Arial", 16);
+
+                SolidBrush drawBrush = new SolidBrush(Color.White);
+                float x = 150.0F;
+                float y = 50.0F;
+                StringFormat drawFormat = new StringFormat();
+
+                Font planetFont = new Font("Arial", 8);
+                SolidBrush planettextBrush = new SolidBrush(Color.White);
+
+                StringFormat planetFormat = new StringFormat();
+
+                /*
+                 *  Sun
+                 */
+                Brush sunBrush = new SolidBrush(Color.Red);
+                RectangleF sun = new RectangleF(600, 300, 20, 20);
+
+                solarSystem = getSolarSystem();
+
+                PointF img = new PointF(20, 20);
+
+                fg.Clear(Color.Black);
+
+                while (drawingSolarSystem)
+                {
+
+                    graphics.Clear(Color.Black);
+
+                    /*
+                     *  Number of days text
+                     */
+
+                    graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
+
+                    /*
+                        Draw sun 
+                    */
+
+                    graphics.FillEllipse(sunBrush, sun);
+
+
+                    foreach (SpaceObject obj in solarSystem)
+                    {
+
+                        /*
+                         * RectangleF objF creates the planet at position 0,0 ( position is updated later)
+                         * Width and height is scaled according to the sun
+                         * 
+                         * int sunDownScaling is used to lower the scale of the sun for visibility purposes
+                         * At 20 the sun is scaled down 20 times
+                         */
+
+                        int sunDownScaling = 20;
+                        RectangleF objF = new RectangleF(0, 0, ((float)(sun.Width / (double)obj.ScalingToSun) * sunDownScaling)
+                            , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
+
+                        pBrush = new SolidBrush(Color.White);
+                        PointF objPoint = obj.calculatePositionPointF(numberOfDays);
+                        objF.X = (objPoint.X / scaling) + sun.X - (objF.Height / 2) + 10;
+                        objF.Y = (objPoint.Y / scaling) + sun.Y - (objF.Width / 2) + 10;
+
+                        if (showNames == true)
+                        {
+                            graphics.DrawString(obj.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
+                        }
+                        graphics.FillEllipse(planetBrush, objF);
+                    }
+
+                    fg.DrawImage(btm, img);
+
+                    Thread.Sleep(10);
+                    numberOfDays += speed;
+                }
+
+                while (drawingPlanetWithMoons)
+                {
+
+                    speed = 1;
+
+                    graphics.Clear(Color.Black);
+
+                    /*
+                     *  Number of days text
+                     */
+
+                    graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
+
+                    RectangleF planet = new RectangleF(600, 300, 20, 20);
+
+                    /*
+                        Draw planet 
+                    */
+
+                    graphics.FillEllipse(sunBrush, planet);
+                    graphics.DrawString(planetObject.Name, planetFont, planettextBrush, planet.X + 25, planet.Y + 25, planetFormat);
+
+                    foreach (Moon moon in mercuryMoons)
+                    {
+
+                        RectangleF objF = new RectangleF(0, 0, ((float)(planet.Width / 5))
+                            , ((float)(planet.Height / 5)));
+
+                        pBrush = new SolidBrush(Color.White);
+                        PointF objPoint = moon.calculatePositionPointF(numberOfDays);
+                        objF.X = (objPoint.X) + planet.X - (objF.Height / 2) + 10;
+                        objF.Y = (objPoint.Y) + planet.Y - (objF.Width / 2) + 10;
+
+                        if (showNames == true)
+                        {
+                           
+                            graphics.DrawString(moon.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
+                        }
+                        graphics.FillEllipse(planetBrush, objF);
+
+                    }
+
+                    fg.DrawImage(btm, img);
+
+                    Thread.Sleep(10);
+                    numberOfDays += speed;
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (showNames == true)
+            {
+                showNames = false;
+            }
+            else
+            {
+                showNames = true;
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectedPlanet = (string)comboBox1.SelectedItem;
+
+            if (selectedPlanet != "Sun")
+            {
+
+                drawingSolarSystem = false;
+                drawingPlanetWithMoons = true;
+
+                foreach (SpaceObject obj in solarSystem)
+                {
+                    if (obj.Name == selectedPlanet)
+                    {
+                        planetObject = obj;
+                        moons = planetObject.Moons;
+                    }
+                }
+            }
+            else
+            {
+                drawingSolarSystem = true;
+                drawingPlanetWithMoons = false;
+            }
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            speed += 5;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (speed >= 5)
+            {
+                speed -= 5;
+            }
         }
 
         private List<SpaceObject> getSolarSystem()
         {
             List<Moon> mercuryMoons = new List<Moon>
             {
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
+                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
                   new Moon("Moon", 0.1, 20.1, 41.2, 24.1, "Dark Gray"),
             };
 
@@ -209,145 +320,24 @@ namespace WindowsFormsApp1
             return solarSystem;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button6_Click(object sender, EventArgs e)
         {
-            if (showNames == true)
-            {
-                showNames = false;
-            } else
-            {
-                showNames = true;
-            }
-            
+            scaling -= 500000;
         }
 
-        public void drawPlanetWithMoons()
+        private void button5_Click(object sender, EventArgs e)
         {
-            drawing = false;
-
-            drawingPlanetWithMoons = true;
-          
-                /*
-                 *  SpaceObject
-                 */
-
-                Brush planetBrush = new SolidBrush(Color.White);
-                Brush pBrush;
-
-                // Text
-                Font drawFont = new Font("Arial", 16);
-
-                SolidBrush drawBrush = new SolidBrush(Color.White);
-                float x = 150.0F;
-                float y = 50.0F;
-                StringFormat drawFormat = new StringFormat();
-
-                Font planetFont = new Font("Arial", 8);
-                SolidBrush planettextBrush = new SolidBrush(Color.White);
-
-                StringFormat planetFormat = new StringFormat();
-
-                /*
-                 *  Sun
-                 */
-                Brush sunBrush = new SolidBrush(Color.Red);
-                RectangleF planet = new RectangleF(600, 300, 20, 20);
-
-                List<SpaceObject> solarSystem = getSolarSystem();
-
-                
-
-                PointF img = new PointF(20, 20);
-
-                fg.Clear(Color.Black);
-
-                while (drawingPlanetWithMoons)
-                {
-
-                    graphics.Clear(Color.Black);
-
-                    /*
-                     *  Number of days text
-                     */
-
-                    graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
-
-                    /*
-                        Draw planet 
-                    */
-
-                    graphics.FillEllipse(sunBrush, planet);
-
-
-                    foreach (Planet obj in solarSystem)
-                    {
-                       
-                        if (obj.Name == selectedPlanet)
-                        {
-
-                        /*
-                 
-
-                        foreach (Moon moon in moons)
-                        {
-                            int sunDownScaling = 20;
-                            RectangleF objF = new RectangleF(0, 0, ((float)(planet.Width) * sunDownScaling)
-                                , ((float)(planet.Height)) * sunDownScaling);
-
-                            pBrush = new SolidBrush(Color.White);
-                            PointF objPoint = obj.calculatePositionPointF(numberOfDays);
-                            objF.X = (objPoint.X / 8000000) + planet.X - (objF.Height / 2) + 10;
-                            objF.Y = (objPoint.Y / 8000000) + planet.Y - (objF.Width / 2) + 10;
-
-                            if (showNames == true)
-                            {
-                                // graphics.DrawString(obj.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
-                            }
-                            graphics.FillEllipse(planetBrush, objF);
-                        }
-                        */
-                        fg.DrawImage(btm, img);
-
-                        Thread.Sleep(10);
-                        numberOfDays += speed;
-                    }
-
-
-                        
-                }
-                      
-                    
-                }
+            scaling += 500000;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            selectedPlanet = (string)comboBox1.SelectedItem;
-            
-            if (selectedPlanet != null)
-            {
 
-                btm = new Bitmap(1920, 1080);
-                graphics = Graphics.FromImage(btm);
-                fg = CreateGraphics();
-                
-                thread2 = new Thread(drawPlanetWithMoons);
-                thread2.IsBackground = true;
-                thread2.Start();
-            }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
-            speed += 5;
-        }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (speed >= 5)
-            {
-                speed -= 5;
-            }
         }
-    }                                                                                                               
+    }
 }

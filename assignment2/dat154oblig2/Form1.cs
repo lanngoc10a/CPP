@@ -32,11 +32,13 @@ namespace WindowsFormsApp1
 
         bool showNames = true;
 
-        int speed = 10;
+        float speed = 10;
 
-        int numberOfDays = 0;
+        float numberOfDays = 0;
 
         int scaling = 8000000;
+
+        int planetScaling = 5;
 
         String selectedPlanet = null;
 
@@ -44,6 +46,9 @@ namespace WindowsFormsApp1
 
         List<SpaceObject> solarSystem = getSolarSystem();
 
+        List<Moon> moons;
+
+        double moonScaling = 1;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -63,30 +68,19 @@ namespace WindowsFormsApp1
 
             while (drawing)
             {
+
                 /*
-                 *  SpaceObject
-                */
-
-                Brush planetBrush = new SolidBrush(Color.White);
-                Brush pBrush;
-
-                // Text
+                 *  Text and fonts
+                 */
                 Font drawFont = new Font("Arial", 16);
-
-                SolidBrush drawBrush = new SolidBrush(Color.White);
-                float x = 150.0F;
-                float y = 50.0F;
+                SolidBrush textBrush = new SolidBrush(Color.White);
                 StringFormat drawFormat = new StringFormat();
-
                 Font planetFont = new Font("Arial", 8);
-                SolidBrush planettextBrush = new SolidBrush(Color.White);
-
-                StringFormat planetFormat = new StringFormat();
 
                 /*
                  *  Sun
                  */
-                Brush sunBrush = new SolidBrush(Color.Red);
+                Brush sunBrush = new SolidBrush(Color.OrangeRed);
                 RectangleF sun = new RectangleF(600, 300, 20, 20);
 
                 PointF img = new PointF(20, 20);
@@ -102,14 +96,13 @@ namespace WindowsFormsApp1
                      *  Number of days text
                      */
 
-                    graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
+                    graphics.DrawString("Antall dager: " + (int)numberOfDays, drawFont, textBrush, 80, 0, drawFormat);
 
                     /*
                         Draw sun 
                     */
 
                     graphics.FillEllipse(sunBrush, sun);
-
 
                     foreach (SpaceObject obj in solarSystem)
                     {
@@ -121,20 +114,21 @@ namespace WindowsFormsApp1
                          * int sunDownScaling is used to lower the scale of the sun for visibility purposes
                          * At 20 the sun is scaled down 20 times
                          */
-
+                        
                         int sunDownScaling = 20;
                         RectangleF objF = new RectangleF(0, 0, ((float)(sun.Width / (double)obj.ScalingToSun) * sunDownScaling)
                             , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
 
-                        pBrush = new SolidBrush(obj.ObjectColor);
+                        Brush pBrush = new SolidBrush(obj.ObjectColor);
                         PointF objPoint = obj.calculatePositionPointF(numberOfDays);
                         objF.X = (objPoint.X / scaling) + sun.X - (objF.Height / 2) + 10;
                         objF.Y = (objPoint.Y / scaling) + sun.Y - (objF.Width / 2) + 10;
 
                         if (showNames == true)
                         {
-                            graphics.DrawString(obj.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
+                            graphics.DrawString(obj.Name, planetFont, textBrush, objF.X + objF.Width, objF.Y + objF.Height, drawFormat);
                         }
+                        
                         graphics.FillEllipse(pBrush, objF);
                     }
 
@@ -147,51 +141,64 @@ namespace WindowsFormsApp1
                 while (drawingPlanetWithMoons)
                 {
 
-                    speed = 1;
-
                     graphics.Clear(Color.Black);
 
                     /*
                      *  Number of days text
                      */
 
-                    graphics.DrawString("Antall dager: " + numberOfDays, drawFont, drawBrush, 100, y + 20, drawFormat);
-
-                    RectangleF planet = new RectangleF(600, 300, 20, 20);
+                    graphics.DrawString("Antall dager: " + (int)numberOfDays, drawFont, textBrush, 80, 0, drawFormat);
 
                     /*
-                        Draw planet 
-                    */
+                     *  Draw Planet
+                     */
 
-                    graphics.FillEllipse(sunBrush, planet);
-                    graphics.DrawString(planetObject.Name, planetFont, planettextBrush, planet.X + 25, planet.Y + 25, planetFormat);
+                    RectangleF planet = new RectangleF(600, 300, 20, 20);
+                    Brush planetBrush = new SolidBrush(planetObject.ObjectColor);
+                    graphics.FillEllipse(planetBrush, planet);
 
-                    var moons = GetMoons(selectedPlanet);
-
-                    foreach (Moon moon in moons)
+                    if (showNames)
                     {
-
-                        RectangleF objF = new RectangleF(0, 0, ((float)(planet.Width / 5))
-                            , ((float)(planet.Height / 5)));
-
-                        pBrush = new SolidBrush(Color.White);
-                        PointF objPoint = moon.calculatePositionPointF(numberOfDays);
-                        objF.X = (objPoint.X) + planet.X - (objF.Height / 2) + 10;
-                        objF.Y = (objPoint.Y) + planet.Y - (objF.Width / 2) + 10;
-
-                        if (showNames == true)
-                        {
-                            graphics.DrawString(moon.Name, planetFont, planettextBrush, objF.X + objF.Width, objF.Y + objF.Height, planetFormat);
-                        }
-                        graphics.FillEllipse(planetBrush, objF);
+                        graphics.DrawString(planetObject.Name, planetFont, textBrush, planet.X + 20, planet.Y + 20, drawFormat);
 
                     }
 
-                    graphics.DrawString("Planet: " + planetObject.Name, planetFont, planettextBrush, 100, 300, planetFormat);
-                    graphics.DrawString("Planet radius: " + planetObject.ObjectRadius + " km", planetFont, planettextBrush, 100, 320, planetFormat);
-                    graphics.DrawString("Distanse fra sola: " + planetObject.OrbitalRadius + " km", planetFont, planettextBrush, 100, 340, planetFormat);
+                    // Planet information
+                    graphics.DrawString("Planet: " + planetObject.Name, planetFont, textBrush, 100, 300, drawFormat);
+                    graphics.DrawString("Planet radius: " + planetObject.ObjectRadius + " km", planetFont, textBrush, 100, 320, drawFormat);
+                    graphics.DrawString("Distanse fra sola: " + planetObject.OrbitalRadius + " km", planetFont, textBrush, 100, 340, drawFormat);
 
+                    /*
+                     *  Draw moons
+                     */
 
+                    foreach (Moon moon in moons)
+                    {
+                        
+                        int scalingToPlanet = 2;
+                        RectangleF objF = new RectangleF(0, 0, (float)(planet.Width / (planetObject.ObjectRadius / moon.ObjectRadius) + scalingToPlanet)
+                            , (float)(planet.Height / (planetObject.ObjectRadius / moon.ObjectRadius) + scalingToPlanet));
+
+                        Brush moonBrush = new SolidBrush(moon.ObjectColor);
+                        PointF objPoint = moon.calculatePositionPointF(numberOfDays);
+
+                        if (moonScaling < 17)
+                        {
+                            objF.X = (objPoint.X * 5) + planet.X - (objF.Height / 2) + 10;
+                            objF.Y = (objPoint.Y * 5) + planet.Y - (objF.Width / 2) + 10;
+                        } else
+                        {
+                            objF.X = (objPoint.X / planetScaling) + planet.X - (objF.Height / 2) + 10;
+                            objF.Y = (objPoint.Y / planetScaling) + planet.Y - (objF.Width / 2) + 10;
+                        }
+
+                        if (showNames == true)
+                        {
+                            graphics.DrawString(moon.Name, planetFont, textBrush, objF.X + objF.Width, objF.Y + objF.Height, drawFormat);
+                        }
+                        graphics.FillEllipse(moonBrush, objF);
+
+                    }
 
                     fg.DrawImage(btm, img);
 
@@ -203,6 +210,7 @@ namespace WindowsFormsApp1
 
         private IEnumerable<Moon> GetMoons(string selectedPlanet)
         {
+           
             switch (selectedPlanet.ToLower())
             {
                 case "earth": return Moons.Earth;
@@ -217,7 +225,7 @@ namespace WindowsFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (showNames == true)
+            if (showNames)
             {
                 showNames = false;
             }
@@ -233,9 +241,11 @@ namespace WindowsFormsApp1
 
             if (selectedPlanet != "Sun")
             {
-
+                
                 drawingSolarSystem = false;
                 drawingPlanetWithMoons = true;
+                moonScaling = 0;
+                speed = 0.05f;
 
                 foreach (SpaceObject obj in solarSystem)
                 {
@@ -244,11 +254,24 @@ namespace WindowsFormsApp1
                         planetObject = obj;
                     }
                 }
+
+                moons = (List<Moon>)GetMoons(selectedPlanet);
+                
+
+                foreach (Moon moon in moons)
+                {
+                    moonScaling += moon.OrbitalRadius;
+                    
+                }
+
+                moonScaling /= moons.Count;
             }
             else
             {
+                selectedPlanet = null;
                 drawingSolarSystem = true;
                 drawingPlanetWithMoons = false;
+                speed = 10;
             }
         }
         private void button3_Click(object sender, EventArgs e)
@@ -285,12 +308,32 @@ namespace WindowsFormsApp1
 
         private void button6_Click(object sender, EventArgs e)
         {
-            scaling -= 500000;
+            if (selectedPlanet == null)
+            {
+                scaling -= 500000;
+            }
+            else
+            {
+                if (planetScaling > 1)
+                {
+                    planetScaling -= 1;
+                }
+               
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            scaling += 500000;
+            if (selectedPlanet == null)
+            {
+                scaling += 500000;
+            } 
+            else
+            {
+
+                planetScaling += 1;
+            }
+            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

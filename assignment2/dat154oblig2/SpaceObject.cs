@@ -103,14 +103,19 @@ namespace SpaceSim
     {
         Planet Planet { get; set; }
 
+        
+
         public Moon(string name) : base(name) { }
 
         public Moon(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor)
-            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
+            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) {
+            
+        }
 
         public override double CalculatePositionX(float time) => base.CalculatePositionX(time) + Planet.X;
         public override double CalculatePositionY(float time) => base.CalculatePositionX(time) + Planet.Y;
 
+        
 
         public override void Draw()
         {

@@ -13,14 +13,13 @@ namespace WindowsFormsApp1
 
         public static List<Moon> Earth { get; } = new List<Moon>
         {
-            new Moon("Moon", 0.1, 20.1, 41.2, 24.1, Color.White)
+            new Moon("Moon", 384, 27.32, 41.2, 24.1, Color.White)
         };
 
         public static List<Moon> Mars { get; } = new List<Moon>
         {
             new Moon("Phobos", 9, 0.32, 41.2, 24.1, Color.White),
-            new Moon("Deimos", 23, 46023, 41.2, 24.1, Color.White),
-            new Moon("Moon", 0.1, 20.1, 41.2, 24.1, Color.White)
+            new Moon("Deimos", 23, 46023, 41.2, 24.1, Color.White)
         };
 
         public static List<Moon> Jupiter { get; } = new List<Moon>
@@ -98,8 +97,7 @@ namespace WindowsFormsApp1
                   new Moon("Larissa", 74, 0.55, 41.2, 24.1, Color.White),
                   new Moon("Proteus", 118, 44166, 41.2, 24.1, Color.White),
                   new Moon("Trition", 355, 5.88, 41.2, 24.1, Color.White),  //minus rotasjon
-                  new Moon("Nereid", 5513, 360, 41.2, 24.1, Color.White),
-                  new Moon("Moon", 0.1, 20.1, 41.2, 24.1, Color.White)
+                  new Moon("Nereid", 5513, 360, 41.2, 24.1, Color.White)
         };
 
     }

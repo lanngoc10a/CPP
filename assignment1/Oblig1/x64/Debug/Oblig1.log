@@ -1,0 +1,6 @@
+﻿  Oblig1.cpp
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(317,74): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(319,74): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(323,43): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\Oblig1.cpp(638,12): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+  Oblig1.vcxproj -> C:\Users\Richard Stølen\source\repos\CPP\assignment1\Oblig1\x64\Debug\Oblig1.exe

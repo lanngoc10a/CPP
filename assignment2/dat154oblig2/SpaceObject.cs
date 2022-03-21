@@ -81,13 +81,12 @@ namespace SpaceSim
     }
     public class Planet : SpaceObject
     {
-        List<Moon> Moons { get; set; }
-
         public Planet(string name) : base(name) { }
 
-        // Fix constructor to pass in moons
-        public Planet(string name, double orbitalRadius, double orbitalPeriod
-            , double objectRadius, double rotationalPeriod, Color objectColor, List<Moon> moons)
+        public Planet(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor)
+            : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor) { }
+
+        public Planet(string name, double orbitalRadius, double orbitalPeriod, double objectRadius, double rotationalPeriod, Color objectColor, List<Moon> moons)
             : base(name, orbitalRadius, orbitalPeriod, objectRadius, rotationalPeriod, objectColor)
         {
             this.Moons = moons;

@@ -32,9 +32,9 @@ namespace WindowsFormsApp1
 
         bool showNames = true;
 
-        float speed = 10;
+        double speed = 10;
 
-        float numberOfDays = 0;
+        double numberOfDays = 0;
 
         int scaling = 8000000;
 
@@ -52,16 +52,13 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             btm = new Bitmap(1920, 1080);
             graphics = Graphics.FromImage(btm);
             fg = CreateGraphics();
             thread = new Thread(Draw);
             thread.IsBackground = true;
             thread.Start();
-
         }
-
 
         public void Draw()
         {
@@ -73,6 +70,7 @@ namespace WindowsFormsApp1
                  *  Text and fonts
                  */
                 Font drawFont = new Font("Arial", 16);
+                Font draw2Font = new Font("Arial", 12);
                 SolidBrush textBrush = new SolidBrush(Color.White);
                 StringFormat drawFormat = new StringFormat();
                 Font planetFont = new Font("Arial", 8);
@@ -93,14 +91,15 @@ namespace WindowsFormsApp1
                     graphics.Clear(Color.Black);
 
                     /*
-                     *  Number of days text
+                     *  Number of days and days per second text
                      */
 
                     graphics.DrawString("Antall dager: " + (int)numberOfDays, drawFont, textBrush, 80, 0, drawFormat);
+                    graphics.DrawString("Dager per sekund: " + (double)speed * 10, draw2Font, textBrush, 80, 30, drawFormat);
 
                     /*
-                        Draw sun 
-                    */
+                     *  Draw sun
+                     */
 
                     graphics.FillEllipse(sunBrush, sun);
 
@@ -120,7 +119,7 @@ namespace WindowsFormsApp1
                             , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
 
                         Brush pBrush = new SolidBrush(obj.ObjectColor);
-                        PointF objPoint = obj.calculatePositionPointF(numberOfDays);
+                        PointF objPoint = obj.calculatePositionPointF((float)numberOfDays);
                         objF.X = (objPoint.X / scaling) + sun.X - (objF.Height / 2) + 10;
                         objF.Y = (objPoint.Y / scaling) + sun.Y - (objF.Width / 2) + 10;
 
@@ -144,10 +143,12 @@ namespace WindowsFormsApp1
                     graphics.Clear(Color.Black);
 
                     /*
-                     *  Number of days text
+                     *  Number of days and days per second text
                      */
 
                     graphics.DrawString("Antall dager: " + (int)numberOfDays, drawFont, textBrush, 80, 0, drawFormat);
+                    graphics.DrawString("Dager per sekund: " + String.Format("{0:0.00}", speed * 10), draw2Font, textBrush, 80, 30, drawFormat);
+
 
                     /*
                      *  Draw Planet
@@ -163,10 +164,14 @@ namespace WindowsFormsApp1
 
                     }
 
-                    // Planet information
-                    graphics.DrawString("Planet: " + planetObject.Name, planetFont, textBrush, 100, 300, drawFormat);
-                    graphics.DrawString("Planet radius: " + planetObject.ObjectRadius + " km", planetFont, textBrush, 100, 320, drawFormat);
-                    graphics.DrawString("Distanse fra sola: " + planetObject.OrbitalRadius + " km", planetFont, textBrush, 100, 340, drawFormat);
+                    /*
+                     *  Planet information
+                     */
+                    int informationX = 0;
+                    int informationY = 500;
+                    graphics.DrawString("Planet: " + planetObject.Name, draw2Font, textBrush, informationX, informationY, drawFormat);
+                    graphics.DrawString("Planet radius: " + planetObject.ObjectRadius + " km", draw2Font, textBrush, informationX, informationY + 20, drawFormat);
+                    graphics.DrawString("Distanse fra sola: " + planetObject.OrbitalRadius + " km", draw2Font, textBrush, informationX, informationY + 40, drawFormat);
 
                     /*
                      *  Draw moons
@@ -180,7 +185,7 @@ namespace WindowsFormsApp1
                             , (float)(planet.Height / (planetObject.ObjectRadius / moon.ObjectRadius) + scalingToPlanet));
 
                         Brush moonBrush = new SolidBrush(moon.ObjectColor);
-                        PointF objPoint = moon.calculatePositionPointF(numberOfDays);
+                        PointF objPoint = moon.calculatePositionPointF((float)numberOfDays);
 
                         if (moonScaling < 17)
                         {
@@ -256,7 +261,6 @@ namespace WindowsFormsApp1
                 }
 
                 moons = (List<Moon>)GetMoons(selectedPlanet);
-                
 
                 foreach (Moon moon in moons)
                 {
@@ -276,14 +280,29 @@ namespace WindowsFormsApp1
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            speed += 5;
+            if (selectedPlanet == null)
+            {
+                speed += 2;
+            }
+            else
+            {
+                speed += 0.005;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (speed >= 5)
+            if (selectedPlanet == null && speed >= 2)
             {
-                speed -= 5;
+                speed -= 2;
+            }
+            else
+            {
+                if (speed > 0.005)
+                {
+                    speed -= 0.005;
+                }
+                
             }
         }
 

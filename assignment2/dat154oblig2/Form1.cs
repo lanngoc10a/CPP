@@ -166,7 +166,6 @@ namespace WindowsFormsApp1
                     graphics.DrawString("Antall dager: " + (int)numberOfDays, drawFont, textBrush, 80, 0, drawFormat);
                     graphics.DrawString("Dager per sekund: " + String.Format("{0:0.00}", speed * 10), draw2Font, textBrush, 80, 30, drawFormat);
 
-
                     /*
                      *  Draw Planet
                      */
@@ -218,7 +217,6 @@ namespace WindowsFormsApp1
                         {
                             graphics.DrawString(moon.Name, planetFont, textBrush, objF.X + objF.Width, objF.Y + objF.Height, drawFormat);
                         }
-
 
                         graphics.FillEllipse(moonBrush, objF);
 
@@ -348,7 +346,11 @@ namespace WindowsFormsApp1
         {
             if (selectedPlanet == null)
             {
-                scaling -= 500000;
+                if (scaling > 500000)
+                {
+                    scaling -= 500000;
+                }
+               
             }
             else
             {

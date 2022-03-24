@@ -22,8 +22,6 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
-
-            
             this.Load += new EventHandler(this.Form1_Load);
         }
 
@@ -337,6 +335,10 @@ namespace WindowsFormsApp1
                 new Planet("Saturn", 1433449370, 10759, 58232, 0.4, Color.PaleGoldenrod, Moons.Saturn),
                 new Planet("Uranus", 2870972200, 30769, 25362, 0.7, Color.Cyan, Moons.Uranus),
                 new Planet("Neptune", 4500000000, 60225, 24622, 0.7, Color.Blue, Moons.Neptune),
+                new Planet("Haumea", 6452000000, 103660, 816, 0.7, Color.Gray),
+                new Planet("Makemake", 6847000000, 111690, 715, 0.7, Color.Gray),
+                new Planet("Eris", 10125000000, 203670, 1163, 0.7, Color.Gray)
+
             };
 
             return solarSystem;

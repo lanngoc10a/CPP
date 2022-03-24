@@ -10,7 +10,6 @@ namespace SpaceSim
     public class SpaceObject
     {
         List<Moon> moons;
-
         public SpaceObject(string name)
         {
             this.Name = name;

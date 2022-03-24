@@ -8,17 +8,23 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 using SpaceSim;
 
 namespace WindowsFormsApp1
 {
+
+
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
-            Load += new EventHandler(Form1_Load);
+
+            
+            this.Load += new EventHandler(this.Form1_Load);
         }
 
         Thread thread;
@@ -31,6 +37,7 @@ namespace WindowsFormsApp1
         bool drawingPlanetWithMoons = false;
 
         bool showNames = true;
+        bool showOrbit = false;
 
         double speed = 10;
 
@@ -50,6 +57,7 @@ namespace WindowsFormsApp1
 
         double moonScaling = 1;
 
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             btm = new Bitmap(1920, 1080);
@@ -59,6 +67,7 @@ namespace WindowsFormsApp1
             thread.IsBackground = true;
             thread.Start();
         }
+
 
         public void Draw()
         {
@@ -100,7 +109,7 @@ namespace WindowsFormsApp1
                     /*
                      *  Draw sun
                      */
-
+                    
                     graphics.FillEllipse(sunBrush, sun);
 
                     foreach (SpaceObject obj in solarSystem)
@@ -113,7 +122,7 @@ namespace WindowsFormsApp1
                          * int sunDownScaling is used to lower the scale of the sun for visibility purposes
                          * At 20 the sun is scaled down 20 times
                          */
-                        
+
                         int sunDownScaling = 20;
                         RectangleF objF = new RectangleF(0, 0, ((float)(sun.Width / (double)obj.ScalingToSun) * sunDownScaling)
                             , ((float)(sun.Height / (double)obj.ScalingToSun)) * sunDownScaling);
@@ -123,14 +132,22 @@ namespace WindowsFormsApp1
                         objF.X = (objPoint.X / scaling) + sun.X - (objF.Height / 2) + 10;
                         objF.Y = (objPoint.Y / scaling) + sun.Y - (objF.Width / 2) + 10;
 
-                        if (showNames == true)
+                        if (showNames)
                         {
                             graphics.DrawString(obj.Name, planetFont, textBrush, objF.X + objF.Width, objF.Y + objF.Height, drawFormat);
                         }
-                        
+                      
+                        if (showOrbit)
+                        {
+                            RectangleF rF = new RectangleF((float)sun.X + 10 - (float)obj.OrbitalRadius / scaling, sun.Y - (float)obj.OrbitalRadius / scaling + 10,
+                            (float)obj.OrbitalRadius * 2 / scaling, (float)obj.OrbitalRadius * 2 / scaling);
+                            Pen orbitBrush = new Pen(new SolidBrush(Color.White));
+                            graphics.DrawEllipse(orbitBrush, rF);
+                        }
+
                         graphics.FillEllipse(pBrush, objF);
                     }
-
+                    
                     fg.DrawImage(btm, img);
 
                     Thread.Sleep(10);
@@ -201,6 +218,8 @@ namespace WindowsFormsApp1
                         {
                             graphics.DrawString(moon.Name, planetFont, textBrush, objF.X + objF.Width, objF.Y + objF.Height, drawFormat);
                         }
+
+
                         graphics.FillEllipse(moonBrush, objF);
 
                     }
@@ -363,6 +382,18 @@ namespace WindowsFormsApp1
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (showOrbit)
+            {
+                showOrbit = false;
+            }
+            else
+            {
+                showOrbit = true;
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ using SpaceSim;
 namespace WindowsFormsApp1
 {
 
-
     public partial class Form1 : Form
     {
         public Form1()
@@ -338,7 +337,6 @@ namespace WindowsFormsApp1
                 new Planet("Haumea", 6452000000, 103660, 816, 0.7, Color.Gray),
                 new Planet("Makemake", 6847000000, 111690, 715, 0.7, Color.Gray),
                 new Planet("Eris", 10125000000, 203670, 1163, 0.7, Color.Gray)
-
             };
 
             return solarSystem;

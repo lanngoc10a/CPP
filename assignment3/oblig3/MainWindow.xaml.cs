@@ -29,11 +29,24 @@ namespace oblig3
             dat154Entities dx = new dat154Entities();
 
             DbSet<student> students = dx.student;
-            
+
+            DbSet<course> courses = dx.course;
+
+            DbSet<grade> grades = dx.grade;
+
             foreach (student s in students)
             {
-                Trace.WriteLine(s.studentname);
+                //tbSettingText.Text += "Name: " + s.studentname + ", Age: " + s.studentage + "\n";
             }
+
+            foreach (course s in courses)
+            {
+                tbSettingText.Text += s.coursename + " " + s.teacher + "\n";
+            }
+
+            
+
+
         }
     }
 }

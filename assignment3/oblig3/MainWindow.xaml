@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+
+        <TextBox Name="tbSettingText" Margin="26,135,387,134">
+            Initial text contents of the TextBox.
+        </TextBox>
+
     </Grid>
 </Window>

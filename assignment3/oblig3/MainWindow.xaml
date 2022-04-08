@@ -5,12 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:oblig3"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800">
+
+
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
 
-        <TextBox Name="tbSettingText" Margin="26,135,387,134">
-            Initial text contents of the TextBox.
-        </TextBox>
+        <TextBlock Grid.Row="1" Grid.Column="1" FontSize="30" Text="Student Viewer"
+                   Grid.ColumnSpan="3" Margin="0,0,0,20"/>
+        
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="sokTekst"/>
 
+        <Button x:Name="studentButton" Content="Student" Grid.Column="1"
+                Grid.Row="3" Margin="0,5,60,5" Height="20" Click="studentButton_Click"/>
+        
+        <Button x:Name="gradeButton" Content="Karakter" Grid.Column="1"
+                Grid.Row="4" Margin="0,5,60,5" Height="20" Click="karakterButton_click"  />
+
+        
+        <TextBox x:Name="outputBox" Grid.Column="1" Grid.Row="9"
+           Grid.ColumnSpan="5"/>
+
+        <StackPanel x:Name="courseList" Grid.Column="4"
+                 Grid.Row="1" Width="150" Height="30" Margin="100,0,0,0">
+
+            <ComboBox Name="cmbCourses" 
+                      SelectionChanged="cmbCourses_SelectionChanged">
+               
+            </ComboBox>
+        </StackPanel>
+
+        <Button x:Name="showFailedButton" Grid.Column="5"
+                Grid.Row="1" Width="60" Height="40" Margin="200,0,0,0"
+                Content="Vis stryk" Click="strykButton_click"/>
     </Grid>
+
+
 </Window>

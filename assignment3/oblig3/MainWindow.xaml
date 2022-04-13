@@ -45,9 +45,6 @@
                 Grid.Row="4" Margin="0,5,60,5" Height="20" Click="karakterButton_click"  />
 
         
-        <TextBox x:Name="outputBox" Grid.Column="1" Grid.Row="9"
-           Grid.ColumnSpan="5"/>
-
         <StackPanel x:Name="courseList" Grid.Column="4"
                  Grid.Row="1" Width="150" Height="30" Margin="100,0,0,0">
 
@@ -60,6 +57,12 @@
         <Button x:Name="showFailedButton" Grid.Column="5"
                 Grid.Row="1" Width="60" Height="40" Margin="200,0,0,0"
                 Content="Vis stryk" Click="strykButton_click"/>
+
+        <ListView Grid.Row="9" Grid.Column="1" Name="listView"
+                  Grid.ColumnSpan="5" ScrollViewer.CanContentScroll="True">
+            
+        </ListView>
+    
     </Grid>
 
 

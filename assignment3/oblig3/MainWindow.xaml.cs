@@ -27,6 +27,7 @@ namespace oblig3
         List<student> students;
         List<course> courses;
         List<grade> grades;
+        ComboBox cmb;
 
         public MainWindow()
         {
@@ -101,7 +102,7 @@ namespace oblig3
         {
             List<grade> studs = new List<grade>();
 
-            ComboBox cmb = sender as ComboBox;
+            cmb = sender as ComboBox;
 
             foreach (course c in courses)
             {
@@ -185,6 +186,29 @@ namespace oblig3
             
         }
 
+        /*
+         *  Task 5
+         *  
+         *  Add and remove students
+         * 
+         */
+
+        private void addStudent_click(object sender, RoutedEventArgs e)
+        {
+            
+            MessageBox.Show($"{nameInput.Text}  ,  {ageInput.Text} " +
+                $"{cmb.SelectedItem}, {gradeInput.Text}");
+
+            using (dx)
+            {
+                if (nameInput.Text != null && ageInput != null && cmb.SelectedItem != null)
+                {
+                    student newstud = new student();
+                }
+                
+            }
+        }
+
 
         /*
          *  Returns grade equal or better to given grade
@@ -252,6 +276,7 @@ namespace oblig3
                 gvc4.Header = "Grade";
                 gvc4.Width = 50;
                 myGridView.Columns.Add(gvc4);
+
             }
 
             if (showGrade)

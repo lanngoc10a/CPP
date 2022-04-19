@@ -39,10 +39,10 @@
         <TextBox Grid.Row="2" Grid.Column="1" x:Name="sokTekst"/>
 
         <Button x:Name="studentButton" Content="Student" Grid.Column="1"
-                Grid.Row="3" Margin="0,5,60,5" Height="20" Click="studentButton_Click"/>
+                Grid.Row="3" Margin="0,5,80,5" Height="20" Click="studentButton_Click"/>
         
         <Button x:Name="gradeButton" Content="Karakter" Grid.Column="1"
-                Grid.Row="4" Margin="0,5,60,5" Height="20" Click="karakterButton_click"  />
+                Grid.Row="3" Margin="80,5,0,5" Height="20" Click="karakterButton_click"  />
 
         
         <StackPanel x:Name="courseList" Grid.Column="4"
@@ -54,15 +54,28 @@
             </ComboBox>
         </StackPanel>
 
-        <Button x:Name="showFailedButton" Grid.Column="5"
-                Grid.Row="1" Width="60" Height="40" Margin="200,0,0,0"
+        <Button x:Name="showFailedButton" Grid.Column="1"
+                Grid.Row="5" Width="60" Height="30" Margin="-90,-30,0,0"
                 Content="Vis stryk" Click="strykButton_click"/>
 
+        
         <ListView Grid.Row="9" Grid.Column="1" Name="listView"
                   Grid.ColumnSpan="5" ScrollViewer.CanContentScroll="True">
-            
         </ListView>
-    
+
+        <TextBox Grid.Row="1" Grid.Column="5" Margin="160,20,20,15" Text="Name" x:Name="nameInput"/>
+
+        <TextBox Grid.Row="3" Grid.Column="5" Margin="160,0,20,15" Text="Age" x:Name="ageInput"/>
+
+        <TextBox Grid.Row="4" Grid.Column="5" Margin="160,0,20,15" Text="Grade" x:Name="gradeInput"/>
+
+        <Button Grid.Column="5"
+                Grid.Row="5" Width="60" Height="30" Margin="210,0,0,0"
+                Content="Legg til" Click="addStudent_click"/>
+
+
+        
+
     </Grid>
 
 

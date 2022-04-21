@@ -63,18 +63,24 @@
                   Grid.ColumnSpan="5" ScrollViewer.CanContentScroll="True">
         </ListView>
 
-        <TextBox Grid.Row="1" Grid.Column="5" Margin="160,20,20,15" Text="Name" x:Name="nameInput"/>
+        <TextBox Grid.Row="1" Grid.Column="5" Margin="120,20,90,15" Text="Name" x:Name="nameInput"/>
 
-        <TextBox Grid.Row="3" Grid.Column="5" Margin="160,0,20,15" Text="Age" x:Name="ageInput"/>
+        <TextBox Grid.Row="3" Grid.Column="5" Margin="120,0,90,15" Text="Age" x:Name="ageInput"/>
 
-        <TextBox Grid.Row="4" Grid.Column="5" Margin="160,0,20,15" Text="Grade" x:Name="gradeInput"/>
+        <TextBox Grid.Row="4" Grid.Column="5" Margin="120,0,90,15" Text="Grade" x:Name="gradeInput"/>
+
+        <TextBox Grid.Row="5" Grid.Column="5" Margin="120,0,90,15" Text="ID" x:Name="idInput"/>
+
+        <Button Grid.Column="5"
+                Grid.Row="4" Width="60" Height="30" Margin="210,0,0,0"
+                Content="Legg til" Click="addStudent_click"/>
 
         <Button Grid.Column="5"
                 Grid.Row="5" Width="60" Height="30" Margin="210,0,0,0"
-                Content="Legg til" Click="addStudent_click"/>
+                Content="Slett" Click="deleteStudent_click"/>
 
 
-        
+
 
     </Grid>
 

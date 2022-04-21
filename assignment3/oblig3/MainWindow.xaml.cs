@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -195,20 +197,77 @@ namespace oblig3
 
         private void addStudent_click(object sender, RoutedEventArgs e)
         {
-            
-            MessageBox.Show($"{nameInput.Text}  ,  {ageInput.Text} " +
-                $"{cmb.SelectedItem}, {gradeInput.Text}");
+            course course = null;
+            bool exists = false;
 
-            using (dx)
+            foreach (student s in students)
             {
-                if (nameInput.Text != null && ageInput != null && cmb.SelectedItem != null)
+                if (Int32.Parse(idInput.Text) == s.id)
                 {
-                    student newstud = new student();
+                    exists = true;
+                    MessageBox.Show("ID eksisterer allerede");
+                    return;
+                }
+            }
+
+            if (exists == true || nameInput.Text == null || ageInput.Text == null || cmb.SelectedItem == null || gradeInput.Text == null || idInput.Text == null
+                || nameInput.Text == "Name" || ageInput.Text == "Age"  || gradeInput.Text == null || idInput.Text == null)
+            {
+                MessageBox.Show("Error, prøv igjen");
+            } 
+            else
+            {
+                foreach (course c in courses)
+                {
+                    if (c.coursename == cmb.SelectedItem.ToString())
+                    {
+                        course = c;
+                    }
                 }
                 
+                student newstud = new student();
+
+                newstud.studentname = nameInput.Text;
+                newstud.studentage = Int32.Parse(ageInput.Text);
+                grade newgrade = new grade();
+                newgrade.grade1 = gradeInput.Text;
+                newgrade.course = course;
+                newstud.grade.Add(newgrade);
+                newstud.id = Int32.Parse(idInput.Text);
+
+                if (exists == false)
+                {
+                    dx.student.Add(newstud);
+                    dx.SaveChanges();
+
+                    students = dx.student.ToList();
+
+                    grades = dx.grade.ToList();
+                    MessageBox.Show($"{newstud.studentname} added to database, refresh course");
+                }
             }
         }
 
+        private void deleteStudent_click(object sender, RoutedEventArgs e)
+        {
+            student deletestud = null;
+
+            foreach (student s in students)
+            {
+                if (Int32.Parse(idInput.Text) == s.id)
+                {
+                    deletestud = s;
+                }
+            }
+
+            dx.student.Remove(deletestud);
+            dx.SaveChanges();
+
+            students = dx.student.ToList();
+            grades = dx.grade.ToList();
+
+            MessageBox.Show($"{deletestud.studentname} deleted from database, refresh course tab");
+        }
 
         /*
          *  Returns grade equal or better to given grade

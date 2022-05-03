@@ -1,0 +1,52 @@
+﻿@using DBAccess
+@model dynamic
+
+@{
+    Layout = null;
+
+   
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Welcome " + @Model.Customer;
+}
+<h1>Welcome @Model.Customer.FirstName</h1>
+<h2>Rooms</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Floor", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter=ViewBag.CurrentFilter })
+        </th>
+        <th>
+            Number of beds
+        </th>
+        <th>
+            @Html.ActionLink("Room size", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter=ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (HotelRoom item in Model.Rooms) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.floorOfHotel)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.numbOfBed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.roomSize)
+        </td>
+        <td>
+            @Html.ActionLink("Book", "Book", new { id=item.roomID }) |
+           
+        </td>
+    </tr>
+}
+
+</table>
+<br />

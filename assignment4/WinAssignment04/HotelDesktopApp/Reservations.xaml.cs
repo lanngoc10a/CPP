@@ -95,7 +95,7 @@ namespace HotelDesktopApp
             res.DateEnd = dateEnd;
             res.RoomSize = roomSize;
             res.BedNumb = bedNumber;
-            res.RoomID = null;
+            res.RoomNumb = null;
 
             AddRes(context, res);
 
@@ -134,18 +134,18 @@ namespace HotelDesktopApp
             Console.WriteLine("Please fill in all required information! ");
             return false;
         }
-        private void RemoveRes(masterEntities dx, int resID)
+        private void RemoveRes(masterEntities dx, int resNumb)
         {
-            ReservationTable res = FindRes(resID);
+            ReservationTable res = FindRes(resNumb);
             dx.ReservationTable.Local.Remove(res);
-            Console.WriteLine("Deleted resevation: " + resID);
+            Console.WriteLine("Deleted resevation: " + resNumb);
         }
 
 
-        private ReservationTable FindRes(int resID)
+        private ReservationTable FindRes(int resNumb)
         {
             ReservationTable res;
-            res = (ReservationTable)dx.ReservationTable.Local.Where(r=> r.ResID.Equals(resID)).First();
+            res = (ReservationTable)dx.ReservationTable.Local.Where(r=> r.ResNumb.Equals(resNumb)).First();
 
             return res;
         }

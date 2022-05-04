@@ -1,0 +1,43 @@
+﻿@using DBAccess
+@model CustomerModel
+
+@{
+    Layout = null;
+}
+<html>
+    <head>
+      
+        @{
+            ViewBag.Title = "Welcome " + @Model.firstName;
+        }
+        
+    </head>
+<body>
+
+    <h1>Welcome @Model.firstName</h1>
+<p>Velg dato</p>
+
+@using(Html.BeginForm("SetDate", "Home", Model, FormMethod.Post))
+{
+    <div>
+           @Html.EditorFor(model => model.startTime)
+
+            @Html.EditorFor(model => model.endTime)
+           
+           
+        <div>
+            <input type="submit" value="Go" />
+        </div>
+    </div>
+
+  
+}
+
+</body>
+
+
+
+</html>
+
+
+ 

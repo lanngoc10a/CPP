@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HotelDesktopApp
+namespace ServiceApp1
 {
     using System;
     using System.Collections.Generic;

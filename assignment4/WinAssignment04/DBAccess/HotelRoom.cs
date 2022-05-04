@@ -15,12 +15,15 @@ namespace DBAccess
     public partial class HotelRoom
     {
         public int roomID { get; set; }
-        public int roomNumb { get; set; }
+        public Nullable<int> roomNumb { get; set; }
         public Nullable<int> floorOfHotel { get; set; }
-        public Nullable<int> numbOfBed { get; set; }
+        public Nullable<int> numbOfBeds { get; set; }
         public Nullable<int> roomSize { get; set; }
-        public Nullable<int> cleaningStatus { get; set; }
+        public Nullable<bool> cleaningStatus { get; set; }
+        public Nullable<bool> service { get; set; }
+        public Nullable<bool> maintenance { get; set; }
+        public string taskNotes { get; set; }
         public bool isUsed { get; set; }
-        public int resNumb { get; set; }
+        public Nullable<int> resNumb { get; set; }
     }
 }

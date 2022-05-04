@@ -28,5 +28,6 @@ namespace DBAccess
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<HotelRoom> HotelRoom { get; set; }
         public virtual DbSet<ReservationTable> ReservationTable { get; set; }
+        public virtual DbSet<Tasks> Tasks { get; set; }
     }
 }

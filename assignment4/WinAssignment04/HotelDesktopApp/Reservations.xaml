@@ -20,7 +20,7 @@
 
         <Button Name="ReservationAdd" Content="Add Reservation" HorizontalAlignment="Left" Margin="90,255,0,0" VerticalAlignment="Top" Click="ReservationAdd_Click"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="255,185,0,0" TextWrapping="Wrap" Text="Reservation ID" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="255,185,0,0" TextWrapping="Wrap" Text="Reservation Number" VerticalAlignment="Top"/>
         <TextBox Name="DeleteRes" HorizontalAlignment="Left" Margin="255,220,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button Name="ReservationDelete" Content="Delete Reservation" HorizontalAlignment="Left" Margin="255,255,0,0" VerticalAlignment="Top" Click="ReservationDelete_Click"/>
 

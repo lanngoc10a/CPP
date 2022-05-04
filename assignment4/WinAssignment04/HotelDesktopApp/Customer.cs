@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBAccess
+namespace HotelDesktopApp
 {
     using System;
     using System.Collections.Generic;

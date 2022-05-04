@@ -25,7 +25,8 @@ namespace HotelDesktopApp
         masterEntities dx = new masterEntities();
         DbSet<ReservationTable> resTable;
         DbSet<HotelRoom> roomTable;
-        
+        DbSet<Tasks> taskList;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +35,7 @@ namespace HotelDesktopApp
             resTable = dx.ReservationTable;
             resTable.Load();
             ResList.DataContext = resTable.Local;
-
+            taskList = dx.Tasks;
 
             roomTable = dx.HotelRoom;
             roomTable.Load();
@@ -68,7 +69,14 @@ namespace HotelDesktopApp
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            
+            resTable.Load();
+            roomTable.Load();
             ResList.DataContext = resTable.Local;
+            RoomList.DataContext = roomTable.Local;
+            
+           
         }
 
         private void CheckIn()
@@ -83,7 +91,7 @@ namespace HotelDesktopApp
             RemoveRes(dx, res.ResID);
             RemoveRoom(dx, room.roomID);
 
-            res.RoomID = room.roomNumb;
+            res.RoomNumb = room.roomNumb;
             room.resNumb = res.ResNumb;
             room.isUsed = true;
 
@@ -142,7 +150,7 @@ namespace HotelDesktopApp
             //if( findRes!=null)
             ReservationTable res = dx.ReservationTable.Local.Where(r => r.ResNumb.Equals(resNumb)).First();
             int resID = res.ResID;
-            int roomID = (int)res.RoomID;
+            int roomID = (int)res.RoomNumb;
 
             RemoveRes(dx, resID);
 
@@ -150,18 +158,56 @@ namespace HotelDesktopApp
             HotelRoom room = dx.HotelRoom.Local.Where(hr => hr.resNumb == resNumb).First();
             RemoveRoom(dx, room.roomID);
 
-            // Cleaningstatus = 2, dirty
-            // Cleaningstatus = 1, currently cleaning
-            // Cleaningstatus = 0, Clean
-            room.cleaningStatus = 2;
-
+            
+            room.cleaningStatus = true;
             room.isUsed = false;
             room.resNumb = null;
+
+            try
+            {
+                updateTasks(room);
+            }catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MakeNewTaskAndUpdateTasks(room);
+            }
+
             AddRoom(dx, room);
             CheckOutResNumb.Text = "";
             SaveChanges(dx);
         }
-        
+
+        private void MakeNewTaskAndUpdateTasks(HotelRoom room)
+        {
+
+            Tasks task = new Tasks();
+            task.roomNumb = room.roomNumb;
+            task.cleaningStatus = (bool)room.cleaningStatus;
+            task.maintenance = (bool)room.maintenance;
+            task.roomService = (bool)room.service;
+            task.taskStatus = "New";
+
+            taskList.Add(task);
+            dx.SaveChanges();
+        }
+
+        private void updateTasks(HotelRoom room)
+        {
+            Tasks task = taskList.Local.Where(t => t.roomNumb == room.roomNumb).First();
+
+            taskList.Remove(task);
+            dx.SaveChanges();
+
+            task.cleaningStatus = (bool)room.cleaningStatus;
+            task.roomService = (bool)room.service;
+            task.maintenance = (bool)room.maintenance;
+
+
+            taskList.Add(task);
+            dx.SaveChanges();
+
+        }
+
         // updates the local DB with the choosen res and room
         // updates so that the resID is removed from the room 
         // and the res is removed from the DB
@@ -180,6 +226,22 @@ namespace HotelDesktopApp
                 CheckOutResNumb.Text = ""; 
             }
        
+        }
+
+        private void RoomList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            HotelRoom room = (HotelRoom) RoomList.SelectedItem;
+
+            try
+            {
+                new RoomEdit(dx, (int)room.roomNumb).ShowDialog();
+
+            }catch(Exception ex)
+            {
+                Console.WriteLine("Something went wrong in RoomEdit!");
+            }
+
+
         }
     }
 

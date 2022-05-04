@@ -12,12 +12,13 @@ namespace DBAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class Tasks
     {
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Pass { get; set; }
-        public Nullable<int> ResID { get; set; }
+        public int taskID { get; set; }
+        public Nullable<int> roomNumb { get; set; }
+        public bool cleaningStatus { get; set; }
+        public bool roomService { get; set; }
+        public bool maintenance { get; set; }
+        public string taskStatus { get; set; }
     }
 }

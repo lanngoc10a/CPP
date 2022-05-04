@@ -15,13 +15,13 @@ namespace DBAccess
     public partial class ReservationTable
     {
         public int ResID { get; set; }
-        public int ResNumb { get; set; }
-        public string FristName { get; set; }
+        public Nullable<int> ResNumb { get; set; }
+        public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateStart { get; set; }
         public string DateEnd { get; set; }
-        public int RoomSize { get; set; }
-        public int BedNumb { get; set; }
+        public Nullable<int> RoomSize { get; set; }
+        public Nullable<int> BedNumb { get; set; }
         public Nullable<int> RoomNumb { get; set; }
     }
 }

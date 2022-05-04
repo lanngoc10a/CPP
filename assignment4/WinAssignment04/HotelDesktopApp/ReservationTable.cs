@@ -22,6 +22,6 @@ namespace HotelDesktopApp
         public string DateEnd { get; set; }
         public Nullable<int> RoomSize { get; set; }
         public Nullable<int> BedNumb { get; set; }
-        public Nullable<int> RoomID { get; set; }
+        public Nullable<int> RoomNumb { get; set; }
     }
 }

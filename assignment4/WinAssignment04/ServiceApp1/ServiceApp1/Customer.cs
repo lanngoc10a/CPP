@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBAccess
+namespace ServiceApp1
 {
     using System;
     using System.Collections.Generic;

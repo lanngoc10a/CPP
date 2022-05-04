@@ -7,17 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBAccess
+namespace ServiceApp1
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class ReservationTable
     {
-        public int ID { get; set; }
+        public int ResID { get; set; }
+        public Nullable<int> ResNumb { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Pass { get; set; }
-        public Nullable<int> ResID { get; set; }
+        public string DateStart { get; set; }
+        public string DateEnd { get; set; }
+        public Nullable<int> RoomSize { get; set; }
+        public Nullable<int> BedNumb { get; set; }
+        public Nullable<int> RoomNumb { get; set; }
     }
 }

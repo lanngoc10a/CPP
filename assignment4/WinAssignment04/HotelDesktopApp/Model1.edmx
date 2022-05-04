@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="masterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Pass" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ResID" Type="int" />
+        </EntityType>
         <EntityType Name="HotelRoom">
           <Key>
             <PropertyRef Name="roomID" />
@@ -12,9 +22,12 @@
           <Property Name="roomID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="roomNumb" Type="int" />
           <Property Name="floorOfHotel" Type="int" />
-          <Property Name="numbOfBed" Type="int" />
+          <Property Name="numbOfBeds" Type="int" />
           <Property Name="roomSize" Type="int" />
-          <Property Name="cleaningStatus" Type="int" />
+          <Property Name="cleaningStatus" Type="bit" />
+          <Property Name="service" Type="bit" />
+          <Property Name="maintenance" Type="bit" />
+          <Property Name="taskNotes" Type="varchar" MaxLength="255" />
           <Property Name="isUsed" Type="bit" Nullable="false" />
           <Property Name="resNumb" Type="int" />
         </EntityType>
@@ -25,22 +38,45 @@
           <Property Name="ResID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ResNumb" Type="int" />
           <Property Name="FirstName" Type="varchar" MaxLength="255" />
-          <Property Name="LastName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="255" />
           <Property Name="DateStart" Type="varchar" MaxLength="255" />
           <Property Name="DateEnd" Type="varchar" MaxLength="255" />
           <Property Name="RoomSize" Type="int" />
           <Property Name="BedNumb" Type="int" />
-          <Property Name="RoomID" Type="int" />
+          <Property Name="RoomNumb" Type="int" />
+        </EntityType>
+        <EntityType Name="Tasks">
+          <Key>
+            <PropertyRef Name="taskID" />
+          </Key>
+          <Property Name="taskID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="roomNumb" Type="int" />
+          <Property Name="cleaningStatus" Type="bit" Nullable="false" />
+          <Property Name="roomService" Type="bit" Nullable="false" />
+          <Property Name="maintenance" Type="bit" Nullable="false" />
+          <Property Name="taskStatus" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityContainer Name="masterModelStoreContainer">
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HotelRoom" EntityType="Self.HotelRoom" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReservationTable" EntityType="Self.ReservationTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="masterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Pass" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ResID" Type="Int32" />
+        </EntityType>
         <EntityType Name="HotelRoom">
           <Key>
             <PropertyRef Name="roomID" />
@@ -48,9 +84,12 @@
           <Property Name="roomID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="roomNumb" Type="Int32" />
           <Property Name="floorOfHotel" Type="Int32" />
-          <Property Name="numbOfBed" Type="Int32" />
+          <Property Name="numbOfBeds" Type="Int32" />
           <Property Name="roomSize" Type="Int32" />
-          <Property Name="cleaningStatus" Type="Int32" />
+          <Property Name="cleaningStatus" Type="Boolean" />
+          <Property Name="service" Type="Boolean" />
+          <Property Name="maintenance" Type="Boolean" />
+          <Property Name="taskNotes" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="isUsed" Type="Boolean" Nullable="false" />
           <Property Name="resNumb" Type="Int32" />
         </EntityType>
@@ -61,16 +100,29 @@
           <Property Name="ResID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ResNumb" Type="Int32" />
           <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="DateStart" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="DateEnd" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="RoomSize" Type="Int32" />
           <Property Name="BedNumb" Type="Int32" />
-          <Property Name="RoomID" Type="Int32" />
+          <Property Name="RoomNumb" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Tasks">
+          <Key>
+            <PropertyRef Name="taskID" />
+          </Key>
+          <Property Name="taskID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="roomNumb" Type="Int32" />
+          <Property Name="cleaningStatus" Type="Boolean" Nullable="false" />
+          <Property Name="roomService" Type="Boolean" Nullable="false" />
+          <Property Name="maintenance" Type="Boolean" Nullable="false" />
+          <Property Name="taskStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="masterEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customer" EntityType="Self.Customer" />
           <EntitySet Name="HotelRoom" EntityType="Self.HotelRoom" />
           <EntitySet Name="ReservationTable" EntityType="Self.ReservationTable" />
+          <EntitySet Name="Tasks" EntityType="Self.Tasks" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -78,15 +130,29 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="masterModelStoreContainer" CdmEntityContainer="masterEntities">
+          <EntitySetMapping Name="Customer">
+            <EntityTypeMapping TypeName="masterModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="ResID" ColumnName="ResID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="HotelRoom">
             <EntityTypeMapping TypeName="masterModel.HotelRoom">
               <MappingFragment StoreEntitySet="HotelRoom">
                 <ScalarProperty Name="roomID" ColumnName="roomID" />
                 <ScalarProperty Name="roomNumb" ColumnName="roomNumb" />
                 <ScalarProperty Name="floorOfHotel" ColumnName="floorOfHotel" />
-                <ScalarProperty Name="numbOfBed" ColumnName="numbOfBed" />
+                <ScalarProperty Name="numbOfBeds" ColumnName="numbOfBeds" />
                 <ScalarProperty Name="roomSize" ColumnName="roomSize" />
                 <ScalarProperty Name="cleaningStatus" ColumnName="cleaningStatus" />
+                <ScalarProperty Name="service" ColumnName="service" />
+                <ScalarProperty Name="maintenance" ColumnName="maintenance" />
+                <ScalarProperty Name="taskNotes" ColumnName="taskNotes" />
                 <ScalarProperty Name="isUsed" ColumnName="isUsed" />
                 <ScalarProperty Name="resNumb" ColumnName="resNumb" />
               </MappingFragment>
@@ -103,7 +169,19 @@
                 <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
                 <ScalarProperty Name="RoomSize" ColumnName="RoomSize" />
                 <ScalarProperty Name="BedNumb" ColumnName="BedNumb" />
-                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="RoomNumb" ColumnName="RoomNumb" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="masterModel.Tasks">
+              <MappingFragment StoreEntitySet="Tasks">
+                <ScalarProperty Name="taskID" ColumnName="taskID" />
+                <ScalarProperty Name="roomNumb" ColumnName="roomNumb" />
+                <ScalarProperty Name="cleaningStatus" ColumnName="cleaningStatus" />
+                <ScalarProperty Name="roomService" ColumnName="roomService" />
+                <ScalarProperty Name="maintenance" ColumnName="maintenance" />
+                <ScalarProperty Name="taskStatus" ColumnName="taskStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
